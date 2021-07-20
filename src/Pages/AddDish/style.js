@@ -28,7 +28,7 @@ export default {
         border:1px solid #DDDDDD;
         background-color: #FFFFFF;
         border-radius: 5px;
-        color: #8863E6;
+        color: #495057;
         font-size: 16px;
         padding:10px;
         margin-bottom:20px;

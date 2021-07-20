@@ -10,6 +10,68 @@ export default function AddMenu(){
         navigation.navigate('Home');
     }
 
+    const categories = [
+        {
+            title: 'Proteínas',
+            id: 1
+        },
+        {
+            title: 'Acompanhamentos',
+            id: 2
+        },
+        {
+            title: 'Saladas',
+            id: 3
+        },
+        {
+            title: 'Sobremesa',
+            id: 4
+        },
+    ];
+
+    const dishes = [
+        {
+            name: 'Frango Grelhado',
+            id: 1,
+            categoryId: 1
+        },
+        {
+            name: 'Carne Seca',
+            id: 2,
+            categoryId: 1
+        },
+        {
+            name: 'Peixe Empanado',
+            id: 3,
+            categoryId: 1
+        },
+        {
+            name: 'Empadão de Frango',
+            id: 4,
+            categoryId: 1
+        },
+        {
+            name: 'Arroz Branco',
+            id: 5,
+            categoryId: 2
+        },
+        {
+            name: 'Farofa',
+            id: 6,
+            categoryId: 2
+        },
+        {
+            name: 'Feijão Preto',
+            id: 7,
+            categoryId: 2
+        },
+        {
+            name: 'Arroz Integral',
+            id: 8,
+            categoryId: 2
+        },
+    ];
+
     return(
         <D.Container>
             <D.Header>
@@ -23,11 +85,19 @@ export default function AddMenu(){
             </D.Header>
 
             <D.List
-                data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]}
-                renderItem={() => (
-                    <D.Label>Nome da Categoria</D.Label>
+                data={categories}
+                renderItem={({item: categories}) => (
+                    <D.ItemsCategories>
+                        <D.Label>{categories.title}</D.Label>
+                        {dishes.map((dish)=>(
+                            dish.categoryId === categories.id &&
+                            <D.DishName>
+                                {dish.name}
+                            </D.DishName>
+                        ))}
+                    </D.ItemsCategories>
                 )}
-                keyExtractor={item => String(item)}
+                keyExtractor={categories => String(categories.id)}
                 showsVerticalScrollIndicator={false}
             >
                 

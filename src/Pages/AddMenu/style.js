@@ -38,4 +38,11 @@ export default {
         font-weight:bold;
         font-size: 16px;
     `,
+    ItemsCategories: styled.View`
+        margin-bottom:20px;
+        padding-bottom:20px;
+        border-bottom-width: 1px;
+        border-bottom-color:#C4C4C4;
+    `,
+    DishName: styled.Text``
 }
