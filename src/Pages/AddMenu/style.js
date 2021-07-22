@@ -44,5 +44,16 @@ export default {
         border-bottom-width: 1px;
         border-bottom-color:#C4C4C4;
     `,
-    DishName: styled.Text``
+    Dish: styled.TouchableOpacity`
+        flex-direction:row;
+        align-items:center;
+        padding:10px;
+        border-radius:5px;
+        margin-bottom:5px;
+    `,
+    DishName: styled.Text`
+        font-size:16px;
+        margin-left:5px;
+        color: #AAAAAA;
+    `,
 }

@@ -1,12 +1,15 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/es/integration/react';
+import { store, persistor } from './src/store';
 import Routes from './src/routes';
 
 export default function App() {
   return (
-    <>
-      <Routes/>
-      <StatusBar style="auto"/>
-    </>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Routes/>
+      </PersistGate>
+    </Provider>
   );
 }
