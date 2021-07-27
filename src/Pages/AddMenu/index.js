@@ -1,107 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Modal, Alert, Switch, Text, StyleSheet } from 'react-native';
+import categories from '../../categories';
+import dishes from '../../dishes';
+import {Picker} from '@react-native-picker/picker';
 import { connect } from 'react-redux';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const AddMenu = (props) => {
     const navigation = useNavigation();
+
+    const [showSuccessModal, setShowSuccessModal]   = useState(false);
+    const [showWarningModal, setShowWarningModal]   = useState(false);
+    const [showDangerModal, setShowDangerModal]     = useState(false);
+
+    const [modalActions, setModalActions]           = useState(false);
+    const [isEnabled, setIsEnabled]                 = useState(false);
+
+    const [selectedDishName, setSelectedDishName]   = useState('');
+    const [selectedDishCategory, setSelectedDishCategory]   = useState('');
+
+    const [errorMessage, setErrorMessage]           = useState('Infelizmente não foi possível criar um cardápio. Tente novamente em alguns instantes.');
+
+    const [newDishName, setNewDishName]             = useState('');
+    const [newDishStatus, setNewDishStatus]         = useState(true);
+    const [newDishCategory, setNewDishCategory]     = useState('');
 
     function backScreen(){
         navigation.navigate('Home');
     }
 
-    const categories = [
+    const modaltypes = [
         {
-            title: 'Proteínas',
-            id: 1
+            show: showSuccessModal,
+            title: 'Parabéns',
+            type: 'success',
+            iconName: 'check',
+            message: 'Cardápio de hoje montado e disponível!'
         },
         {
-            title: 'Acompanhamentos',
-            id: 2
+            show: showWarningModal,
+            title: 'Aviso',
+            type: 'warning',
+            iconName: 'check',
+            message: 'Ao menos um prato precisa estar selecionado para criar um cardápio.'
         },
         {
-            title: 'Saladas',
-            id: 3
-        },
-        {
-            title: 'Sobremesa',
-            id: 4
-        },
-    ];
-
-    const dishes = [
-        {
-            name: 'Frango Grelhado',
-            id: 1,
-            categoryId: 1,
-            selected: null
-        },
-        {
-            name: 'Carne Seca',
-            id: 2,
-            categoryId: 1,
-            selected: null
-        },
-        {
-            name: 'Peixe Empanado',
-            id: 3,
-            categoryId: 1,
-            selected: null
-        },
-        {
-            name: 'Empadão de Frango',
-            id: 4,
-            categoryId: 1,
-            selected: null
-        },
-        {
-            name: 'Arroz Branco',
-            id: 5,
-            categoryId: 2,
-            selected: null
-        },
-        {
-            name: 'Farofa',
-            id: 6,
-            categoryId: 2,
-            selected: null
-        },
-        {
-            name: 'Feijão Preto',
-            id: 7,
-            categoryId: 2,
-            selected: null
-        },
-        {
-            name: 'Arroz Integral',
-            id: 8,
-            categoryId: 2,
-            selected: null
-        },
-        {
-            name: 'Cenoura',
-            id: 9,
-            categoryId: 3,
-            selected: null
-        },
-        {
-            name: 'Beterraba',
-            id: 10,
-            categoryId: 3,
-            selected: null
-        },
-        {
-            name: 'Agrião',
-            id: 11,
-            categoryId: 3,
-            selected: null
-        },
-        {
-            name: 'Batata Doce',
-            id: 12,
-            categoryId: 3,
-            selected: null
+            show: showDangerModal,
+            title: 'Erro',
+            type: 'danger',
+            iconName: 'close',
+            message: errorMessage
         },
     ];
 
@@ -118,39 +68,154 @@ const AddMenu = (props) => {
         props.setDishes(newDish);
     }
 
+    const saveMenu = async () => {
+        if(props.dishes != ''){
+            setShowSuccessModal(true);
+            props.setDishes([]);
+        }else{
+            setShowWarningModal(true);
+        }
+    }
+
+    const alertDishDisabled = () => {
+        Alert.alert(
+        "Atenção!",
+        "Prato desabilitado.",
+        [
+          { text: "Tudo bem" }
+        ]
+      );
+    }
+
+    const openModal = (dish) => {
+        setSelectedDishName(dish.name);
+        setIsEnabled(dish.status);
+        setSelectedDishCategory(dish.categoryId);
+        setModalActions(true);
+    }
+
     return(
         <D.Container>
             <D.Header>
-                <AntDesign name="arrowleft" size={24} color="#333333" onPress={backScreen}/>
-                <D.HeaderTitle>Montar Cardápio</D.HeaderTitle>
+                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={backScreen}/>
+                <Text style={style({}).headerTitle}>Montar Cardápio</Text>
             </D.Header>
 
             <D.List
                 data={categories}
                 renderItem={({item: categories}) => (
-                    <D.ItemsCategories>
-                        <D.Label>{categories.title}</D.Label>
-                        {dishes.map((dish, index)=>(
-                            dish.categoryId === categories.id &&
-                            <D.Dish key={index} onPress={()=>toggleDishes(dish.id)}>
-                                {props.dishes.includes(dish.id)
-                                ? <MaterialCommunityIcons name="checkbox-marked" size={24} color="#0D6EFD" />
-                                : <MaterialCommunityIcons name="square-outline" size={24} color="#AAAAAA" />}
-                                <D.DishName>{dish.name}</D.DishName>
-                            </D.Dish>
-                        ))}
-                    </D.ItemsCategories>
+                    <>
+                        <D.ItemsCategories>
+                            <D.Label>{categories.title}</D.Label>
+                                {dishes.map((dish, index)=>(
+                                    dish.categoryId === categories.id &&
+                                    <D.DishContainer key={index}>
+                                        <D.Dish onPress={
+                                            dish.status
+                                            ? ()=>toggleDishes(dish.id)
+                                            : ()=>alertDishDisabled()
+                                        }>
+                                            <>
+                                            {props.dishes.includes(dish.id) && dish.status &&
+                                                <MaterialCommunityIcons name="checkbox-marked" size={24} color="#0D6EFD" />                                     
+                                            }
+                                            {!props.dishes.includes(dish.id) && dish.status &&
+                                                <MaterialCommunityIcons name="square-outline" size={24} color="#AAAAAA" />
+                                            }
+                                            {!props.dishes.includes(dish.id) && !dish.status &&
+                                                <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
+                                            }
+                                            </>
+                                            <D.DishName>{dish.name}</D.DishName>
+                                        </D.Dish>
+                                        <D.DishButton onPress={()=>openModal(dish)}>
+                                            <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
+                                        </D.DishButton>
+                                    </D.DishContainer>
+
+                                ))}
+                        </D.ItemsCategories>
+                    </>
                 )}
                 keyExtractor={categories => String(categories.id)}
                 showsVerticalScrollIndicator={false}
-            >
-                
-            </D.List>
+            />
 
-            <D.SaveButton>
-                <D.SaveButtonText>Divulgar o Cardápio</D.SaveButtonText>
+            <D.SaveButton onPress={saveMenu}>
+                <D.SaveButtonText>Salvar Cardápio</D.SaveButtonText>
             </D.SaveButton>
-            
+
+            {modaltypes.map((item, index)=>(
+                <Modal key={index} animationType="slide" transparent={true} statusBarTranslucent={true} visible={item.show}>
+                    <D.ModalContainer>
+                        <D.ModalTitle>{item.title}!</D.ModalTitle>
+                        <D.CircleOpacity modalType={item.type}>
+                            <D.Circle modalType={item.type}>
+                                <MaterialCommunityIcons name={item.iconName} size={60} color={item.type === 'warning' ? "#333333" : "#FFFFFF"} />
+                            </D.Circle>
+                        </D.CircleOpacity>
+                        <D.Message modalType={item.type}>{item.message}</D.Message>
+                        <D.BackToHome modalType={item.type} 
+                            onPress={item.type === 'warning' 
+                                ? ()=>setShowWarningModal(false) 
+                                : backScreen
+                            }>
+                            <D.BackToHomeText modalType={item.type}>
+                                {item.type === 'warning' ? "Corrigir" : "Voltar para a Tela Inicial"}
+                            </D.BackToHomeText>
+                        </D.BackToHome>
+                    </D.ModalContainer>
+                </Modal>
+            ))}
+
+            <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={modalActions}>
+                <D.ActionsMain>
+                    <D.ModalActionsContainer>
+                        <D.CloseModalButton onPress={()=>setModalActions(false)}>
+                            <MaterialCommunityIcons name="close" size={24} color="#FFFFFF"/>
+                        </D.CloseModalButton>
+                        <D.ToogleDishStatus>
+                            <D.ToogleDishStatusText>
+                                {isEnabled ? 'Desabilitar' : 'Habilitar'} {selectedDishName}.
+                            </D.ToogleDishStatusText>
+                            <Switch
+                                trackColor={{ false: "#767577", true: "#FF9900" }}
+                                thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={()=>setIsEnabled(!isEnabled)}
+                                value={isEnabled}
+                            />
+                        </D.ToogleDishStatus>
+                        <D.Label>Alterar o Nome do Prato</D.Label>
+                        <D.Input
+                            placeholder={selectedDishName}
+                            placeholderTextColor="#C4C4C4"
+                            value={newDishName}
+                            onChangeText={t=>setNewDishName(t)}
+                        />
+                        <D.Label>Alterar Categoria</D.Label>
+                        <D.Select>
+                            <Picker
+                                selectedValue={selectedDishCategory}
+                                onValueChange={(itemValue) => setNewDishCategory(itemValue)}
+                            >
+                                <Picker.Item label="Selecione uma categoria..." value="" enabled={false} style={{color:'#C4C4C4'}} />
+                                {categories.map((category, index)=>(
+                                    <Picker.Item 
+                                        label={category.title}
+                                        value={category.id}
+                                        style={{color:'#495057'}}
+                                        key={index}
+                                    />
+                                ))}
+                            </Picker>
+                        </D.Select>
+                        <D.SaveChangesButton>
+                            <D.SaveChangesButtonText>Salvar Alterações</D.SaveChangesButtonText>
+                        </D.SaveChangesButton>
+                    </D.ModalActionsContainer>
+                </D.ActionsMain>
+            </Modal>
         </D.Container>
     )
 }
@@ -173,3 +238,13 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect (mapStateToProps, mapDispatchToProps)(AddMenu);
+
+const style = (props) => StyleSheet.create({
+    headerTitle: {
+        flex: 1,
+        textAlign:'center',
+        fontSize:18,
+        fontFamily:'PoppinsBold',
+        color: '#333333'
+    },
+})

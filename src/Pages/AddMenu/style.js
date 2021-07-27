@@ -19,7 +19,9 @@ export default {
         font-weight:bold;
         color: #333333;
     `,
-    List: styled.FlatList``,
+    List: styled.FlatList`
+        margin:0 0 15px;
+    `,
     Label: styled.Text`
         font-size:16px;
         color: #495057;
@@ -44,16 +46,182 @@ export default {
         border-bottom-width: 1px;
         border-bottom-color:#C4C4C4;
     `,
+    DishContainer: styled.View`
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+    `,
     Dish: styled.TouchableOpacity`
         flex-direction:row;
         align-items:center;
-        padding:10px;
-        border-radius:5px;
+        padding:5px 0;
         margin-bottom:5px;
     `,
     DishName: styled.Text`
         font-size:16px;
         margin-left:5px;
         color: #AAAAAA;
+    `,
+    DishButton: styled.TouchableOpacity`
+    `,
+    ModalContainer: styled.View`
+        flex:1;
+        padding:60px 25px 30px;
+        background-color:#FFFFFF;
+        justify-content:space-between;
+        align-items:center;
+    `,
+    ModalTitle: styled.Text`
+        font-size:28px;
+        color: #495057;
+        font-weight:bold;
+    `,
+    CircleOpacity: styled.View`
+        width:135px;
+        height:135px;
+        
+        ${props => {
+            if (props.modalType === 'success') {
+                return "background-color: rgba(165, 220, 134, 0.1);"
+            } else if (props.modalType === 'warning') {
+                return "background-color: rgba(250, 206, 168, 0.1);"
+            } else {
+                return "background-color: rgba(242, 116, 116, 0.1);"
+            }
+        }}
+
+        border-radius:70px;
+        justify-content:center;
+        align-items:center;
+    `,
+    Circle: styled.View`
+        width:100px;
+        height:100px;
+        
+        ${props => {
+            if (props.modalType === 'success') {
+                return "background-color: rgb(165, 220, 134);"
+            } else if (props.modalType === 'warning') {
+                return "background-color: rgb(250, 206, 168);"
+            } else {
+                return "background-color: rgb(242, 116, 116);"
+            }
+        }}
+
+        border-radius:50px;
+        justify-content:center;
+        align-items:center;
+    `,
+    Message: styled.Text`
+        ${props => {
+            if (props.modalType === 'success') {
+                return "width: 60%;"
+            } else if (props.modalType === 'warning') {
+                return "width: 65%;"
+            } else {
+                return "width: 100%;"
+            }
+        }}
+
+        text-align:center;
+        font-size:18px;
+        color: #AAAAAA;
+    `,
+    BackToHome: styled.TouchableOpacity`
+        width:100%;
+        
+        ${props => {
+            if (props.modalType === 'success') {
+                return "background-color: rgb(165, 220, 134);"
+            } else if (props.modalType === 'warning') {
+                return "background-color: rgb(250, 206, 168);"
+            } else {
+                return "background-color: rgb(242, 116, 116);"
+            }
+        }}
+
+        justify-content:center;
+        align-items:center;
+        padding:15px;
+        border-radius: 5px;
+    `,
+    BackToHomeText: styled.Text`        
+        color:${props => props.modalType === 'warning' ? "#333333" : "#FFFFFF"};
+        font-weight:bold;
+        font-size: 16px;
+    `,
+    ActionsMain: styled.View`
+        flex:1;
+        background-color:rgba(0, 0, 0, 0.8);
+    `,
+    ModalActionsContainer: styled.View`
+        width:100%;
+        border-top-width:5px;
+        border-top-color:#FF9900;
+        background-color:#FFFFFF;
+        padding:20px 50px 50px;
+        position:absolute;
+        bottom:0;
+        display:flex;
+        align-items:flex-end;
+        justify-content:space-between;
+    `,
+    CloseModalButton:styled.TouchableOpacity`
+        width: 40px;
+        height: 40px;
+        justify-content:center;
+        align-items:center;
+        background-color:#FF9900;
+        border-radius:20px;
+    `,
+    ToogleDishStatus: styled.View`
+        width:100%;
+        margin:50px 0px 30px;
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+    `,
+    ToogleDishStatusText: styled.Text`
+        font-size:16px;
+        color:#AAAAAA;
+    `,
+    Label: styled.Text`
+        width:100%;
+        font-size:16px;
+        color: #495057;
+        margin-bottom:10px;
+    `,
+    Input: styled.TextInput`
+        width:100%;
+        border:1px solid #DDDDDD;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        color: #495057;
+        font-size: 16px;
+        padding:10px;
+        margin-bottom:20px;
+    `,
+    Select: styled.View`
+        width:100%;
+        border:1px solid #DDDDDD;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        color: #8863E6;
+        font-size: 16px;
+        padding:15px 0;
+        margin-bottom:20px;
+    `,
+    SaveChangesButton: styled.TouchableOpacity`
+        width:100%;
+        background-color:#FF9900;
+        justify-content:center;
+        align-items:center;
+        padding:15px;
+        border-radius: 5px;
+    `,
+    SaveChangesButtonText: styled.Text`
+        color: #FFFFFF;
+        font-weight:bold;
+        font-size: 16px;
     `,
 }
