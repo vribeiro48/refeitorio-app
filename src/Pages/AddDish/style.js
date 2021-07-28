@@ -123,7 +123,7 @@ export default {
     BackToHome: styled.TouchableOpacity`
         ${props => {
             if (props.modalType === 'success') {
-                return "background-color: rgb(165, 220, 134);width:49%;padding:10px 40px;"
+                return "background-color: rgb(165, 220, 134);width:48%;padding:15px 30px 10px;"
             } else if (props.modalType === 'warning') {
                 return "background-color: rgb(250, 206, 168);width:100%;padding:15px;"
             } else {

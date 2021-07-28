@@ -106,7 +106,7 @@ const AddMenu = (props) => {
                 renderItem={({item: categories}) => (
                     <>
                         <D.ItemsCategories>
-                            <D.Label>{categories.title}</D.Label>
+                            <Text style={style({}).label}>{categories.title}</Text>
                                 {dishes.map((dish, index)=>(
                                     dish.categoryId === categories.id &&
                                     <D.DishContainer key={index}>
@@ -126,7 +126,7 @@ const AddMenu = (props) => {
                                                 <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
                                             }
                                             </>
-                                            <D.DishName>{dish.name}</D.DishName>
+                                            <Text style={style({}).dishName}>{dish.name}</Text>
                                         </D.Dish>
                                         <D.DishButton onPress={()=>openModal(dish)}>
                                             <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
@@ -142,28 +142,51 @@ const AddMenu = (props) => {
             />
 
             <D.SaveButton onPress={saveMenu}>
-                <D.SaveButtonText>Salvar Cardápio</D.SaveButtonText>
+                <Text style={style({}).saveButtonText}>Salvar Cardápio</Text>
             </D.SaveButton>
 
             {modaltypes.map((item, index)=>(
                 <Modal key={index} animationType="slide" transparent={true} statusBarTranslucent={true} visible={item.show}>
                     <D.ModalContainer>
-                        <D.ModalTitle>{item.title}!</D.ModalTitle>
+                        <Text style={style({}).modalTitle}>{item.title}!</Text>
                         <D.CircleOpacity modalType={item.type}>
                             <D.Circle modalType={item.type}>
                                 <MaterialCommunityIcons name={item.iconName} size={60} color={item.type === 'warning' ? "#333333" : "#FFFFFF"} />
                             </D.Circle>
                         </D.CircleOpacity>
-                        <D.Message modalType={item.type}>{item.message}</D.Message>
-                        <D.BackToHome modalType={item.type} 
-                            onPress={item.type === 'warning' 
-                                ? ()=>setShowWarningModal(false) 
-                                : backScreen
-                            }>
-                            <D.BackToHomeText modalType={item.type}>
-                                {item.type === 'warning' ? "Corrigir" : "Voltar para a Tela Inicial"}
-                            </D.BackToHomeText>
-                        </D.BackToHome>
+
+                        <Text style={style({modalType: item.type}).message}>{item.message}</Text>
+                        
+                        {item.type === 'success' &&
+                            <D.BackToHome modalType={item.type}>
+                                <Text
+                                    style={style({modalType: item.type}).backToHomeText}
+                                    onPress={()=>navigation.navigate('Home')}
+                                >
+                                    Voltar para a Tela Inicial
+                                </Text>
+                            </D.BackToHome>
+                        }
+                        {item.type === 'warning' &&
+                            <D.BackToHome 
+                                modalType={item.type}
+                                onPress={()=>setShowWarningModal(false)}
+                            >
+                                <Text style={style({modalType: item.type}).backToHomeText}>
+                                    Corrigir
+                                </Text>
+                            </D.BackToHome>
+                        }
+                        {item.type === 'danger' &&
+                            <D.BackToHome modalType={item.type}>
+                                <Text
+                                    style={style({modalType: item.type}).backToHomeText}
+                                    onPress={()=>navigation.navigate('Home')}
+                                >
+                                    Voltar para a Tela Inicial
+                                </Text>
+                            </D.BackToHome>
+                        }
                     </D.ModalContainer>
                 </Modal>
             ))}
@@ -175,9 +198,9 @@ const AddMenu = (props) => {
                             <MaterialCommunityIcons name="close" size={24} color="#FFFFFF"/>
                         </D.CloseModalButton>
                         <D.ToogleDishStatus>
-                            <D.ToogleDishStatusText>
+                            <Text style={style({}).toogleDishStatusText}>
                                 {isEnabled ? 'Desabilitar' : 'Habilitar'} {selectedDishName}.
-                            </D.ToogleDishStatusText>
+                            </Text>
                             <Switch
                                 trackColor={{ false: "#767577", true: "#FF9900" }}
                                 thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -186,14 +209,14 @@ const AddMenu = (props) => {
                                 value={isEnabled}
                             />
                         </D.ToogleDishStatus>
-                        <D.Label>Alterar o Nome do Prato</D.Label>
+                        <Text style={style({}).label}>Alterar o Nome do Prato</Text>
                         <D.Input
                             placeholder={selectedDishName}
                             placeholderTextColor="#C4C4C4"
                             value={newDishName}
                             onChangeText={t=>setNewDishName(t)}
                         />
-                        <D.Label>Alterar Categoria</D.Label>
+                        <Text style={style({}).label}>Alterar Categoria</Text>
                         <D.Select>
                             <Picker
                                 selectedValue={selectedDishCategory}
@@ -211,7 +234,7 @@ const AddMenu = (props) => {
                             </Picker>
                         </D.Select>
                         <D.SaveChangesButton>
-                            <D.SaveChangesButtonText>Salvar Alterações</D.SaveChangesButtonText>
+                            <Text style={style({}).saveChangesButtonText}>Salvar Alterações</Text>
                         </D.SaveChangesButton>
                     </D.ModalActionsContainer>
                 </D.ActionsMain>
@@ -247,4 +270,50 @@ const style = (props) => StyleSheet.create({
         fontFamily:'PoppinsBold',
         color: '#333333'
     },
+    saveButtonText: {
+        fontFamily:'PoppinsBold',
+        color: '#FFFFFF',
+        fontSize: 16
+    },
+    modalTitle: {
+        fontFamily:'PoppinsBold',
+        fontSize: 28,
+        color: '#495057'
+    },
+    message: {
+        fontFamily:'PoppinsMedium',
+        width: props.modalType === 'success' ? '60%' : '100%',
+        textAlign:'center',
+        fontSize:18,
+        color: '#AAAAAA',
+        lineHeight: 20
+    },
+    backToHomeText: {
+        color: props.modalType === 'warning' ? '#333333' : '#FFFFFF',
+        fontFamily:'PoppinsBold',
+        textAlign:'center',
+    },
+    label: {
+        width:'100%',
+        fontSize:16,
+        color: '#495057',
+        marginBottom:10,
+        fontFamily:'PoppinsMedium'
+    },
+    saveChangesButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily:'PoppinsBold',
+    },
+    toogleDishStatusText: {
+        fontSize:16,
+        color:'#AAAAAA',
+        fontFamily:'PoppinsRegular'
+    },
+    dishName: {
+        fontSize:16,
+        marginLeft:5,
+        color: '#AAAAAA',
+        fontFamily:'PoppinsRegular'
+    }
 })

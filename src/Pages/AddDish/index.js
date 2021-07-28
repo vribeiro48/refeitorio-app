@@ -118,10 +118,12 @@ export default function AddDish(){
                         
                         {item.type === 'success' &&
                             <D.TwoButton>
-                                <D.BackToHome modalType={item.type}>
+                                <D.BackToHome
+                                    modalType={item.type}
+                                    onPress={()=>setShowSuccessModal(false)}
+                                >
                                     <Text
                                         style={style({modalType: item.type}).backToHomeText}
-                                        onPress={()=>setShowSuccessModal(false)}
                                     >
                                         Adicionar Outro Prato
                                     </Text>
@@ -144,6 +146,18 @@ export default function AddDish(){
                             >
                                 <Text style={style({modalType: item.type}).backToHomeText}>
                                     Corrigir
+                                </Text>
+                            </D.BackToHome>
+                        }
+                        {item.type === 'danger' &&
+                            <D.BackToHome 
+                                modalType={item.type} 
+                                onPress={()=>navigation.navigate('Home')}
+                            >
+                                <Text
+                                    style={style({modalType: item.type}).backToHomeText}
+                                >
+                                    Voltar para a Tela Inicial
                                 </Text>
                             </D.BackToHome>
                         }
@@ -184,5 +198,6 @@ const style = (props) => StyleSheet.create({
         color: props.modalType === 'warning' ? '#333333' : '#FFFFFF',
         fontFamily:'PoppinsBold',
         textAlign:'center',
+        lineHeight: 15
     }
 })

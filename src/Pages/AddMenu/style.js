@@ -12,21 +12,8 @@ export default {
         flex-direction:row;
         align-items:center;
     `,
-    HeaderTitle: styled.Text`
-        flex:1;
-        text-align:center;
-        font-size:18px;
-        font-weight:bold;
-        color: #333333;
-    `,
     List: styled.FlatList`
         margin:0 0 15px;
-    `,
-    Label: styled.Text`
-        font-size:16px;
-        color: #495057;
-        margin-bottom:10px;
-        font-weight:bold;
     `,
     SaveButton: styled.TouchableOpacity`
         background-color:#FF9900;
@@ -34,11 +21,6 @@ export default {
         align-items:center;
         padding:15px;
         border-radius: 5px;
-    `,
-    SaveButtonText: styled.Text`
-        color: #FFFFFF;
-        font-weight:bold;
-        font-size: 16px;
     `,
     ItemsCategories: styled.View`
         margin-bottom:20px;
@@ -57,11 +39,6 @@ export default {
         padding:5px 0;
         margin-bottom:5px;
     `,
-    DishName: styled.Text`
-        font-size:16px;
-        margin-left:5px;
-        color: #AAAAAA;
-    `,
     DishButton: styled.TouchableOpacity`
     `,
     ModalContainer: styled.View`
@@ -70,11 +47,6 @@ export default {
         background-color:#FFFFFF;
         justify-content:space-between;
         align-items:center;
-    `,
-    ModalTitle: styled.Text`
-        font-size:28px;
-        color: #495057;
-        font-weight:bold;
     `,
     CircleOpacity: styled.View`
         width:135px;
@@ -112,23 +84,8 @@ export default {
         justify-content:center;
         align-items:center;
     `,
-    Message: styled.Text`
-        ${props => {
-            if (props.modalType === 'success') {
-                return "width: 60%;"
-            } else if (props.modalType === 'warning') {
-                return "width: 65%;"
-            } else {
-                return "width: 100%;"
-            }
-        }}
-
-        text-align:center;
-        font-size:18px;
-        color: #AAAAAA;
-    `,
     BackToHome: styled.TouchableOpacity`
-        width:100%;
+        width: 100%;
         
         ${props => {
             if (props.modalType === 'success') {
@@ -144,11 +101,6 @@ export default {
         align-items:center;
         padding:15px;
         border-radius: 5px;
-    `,
-    BackToHomeText: styled.Text`        
-        color:${props => props.modalType === 'warning' ? "#333333" : "#FFFFFF"};
-        font-weight:bold;
-        font-size: 16px;
     `,
     ActionsMain: styled.View`
         flex:1;
@@ -181,16 +133,6 @@ export default {
         justify-content:space-between;
         align-items:center;
     `,
-    ToogleDishStatusText: styled.Text`
-        font-size:16px;
-        color:#AAAAAA;
-    `,
-    Label: styled.Text`
-        width:100%;
-        font-size:16px;
-        color: #495057;
-        margin-bottom:10px;
-    `,
     Input: styled.TextInput`
         width:100%;
         border:1px solid #DDDDDD;
@@ -200,6 +142,7 @@ export default {
         font-size: 16px;
         padding:10px;
         margin-bottom:20px;
+        font-family:PoppinsRegular;
     `,
     Select: styled.View`
         width:100%;
@@ -218,10 +161,5 @@ export default {
         align-items:center;
         padding:15px;
         border-radius: 5px;
-    `,
-    SaveChangesButtonText: styled.Text`
-        color: #FFFFFF;
-        font-weight:bold;
-        font-size: 16px;
     `,
 }
