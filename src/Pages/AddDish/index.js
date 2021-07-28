@@ -122,9 +122,7 @@ export default function AddDish(){
                                     modalType={item.type}
                                     onPress={()=>setShowSuccessModal(false)}
                                 >
-                                    <Text
-                                        style={style({modalType: item.type}).backToHomeText}
-                                    >
+                                    <Text style={style({modalType: item.type}).backToHomeText}>
                                         Adicionar Outro Prato
                                     </Text>
                                 </D.BackToHome>

@@ -84,22 +84,33 @@ export default {
         justify-content:center;
         align-items:center;
     `,
+    TwoButton: styled.View`
+        width:100%;
+        flex-direction:row;
+        justify-content:space-between;
+    `,
     BackToHome: styled.TouchableOpacity`
-        width: 100%;
-        
         ${props => {
             if (props.modalType === 'success') {
-                return "background-color: rgb(165, 220, 134);"
+                let width;
+
+                if(props.button === 'saveMenu'){
+                    width = 'width:100%';
+                }else{
+                    width = 'width:48%';
+                }
+
+                return "background-color: rgb(165, 220, 134);"+width+";padding:15px 30px 10px;"
+                
             } else if (props.modalType === 'warning') {
-                return "background-color: rgb(250, 206, 168);"
+                return "background-color: rgb(250, 206, 168);width:100%;padding:15px;"
             } else {
-                return "background-color: rgb(242, 116, 116);"
+                return "background-color: rgb(242, 116, 116);width:100%;padding:15px;"
             }
         }}
 
         justify-content:center;
         align-items:center;
-        padding:15px;
         border-radius: 5px;
     `,
     ActionsMain: styled.View`

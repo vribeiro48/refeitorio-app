@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Alert, Switch, Text, StyleSheet } from 'react-native';
 import categories from '../../categories';
 import dishes from '../../dishes';
@@ -17,15 +17,23 @@ const AddMenu = (props) => {
 
     const [modalActions, setModalActions]           = useState(false);
     const [isEnabled, setIsEnabled]                 = useState(false);
+    const [button, setButton]                       = useState('saveMenu');
 
     const [selectedDishName, setSelectedDishName]   = useState('');
     const [selectedDishCategory, setSelectedDishCategory]   = useState('');
 
+    const [successMessage, setSuccessMessage]       = useState('Cardápio de hoje montado e disponível!');
+    const [warningMessage, setWarningMessage]       = useState('Ao menos um prato precisa estar selecionado para criar um cardápio.');
     const [errorMessage, setErrorMessage]           = useState('Infelizmente não foi possível criar um cardápio. Tente novamente em alguns instantes.');
 
     const [newDishName, setNewDishName]             = useState('');
     const [newDishStatus, setNewDishStatus]         = useState(true);
     const [newDishCategory, setNewDishCategory]     = useState('');
+
+    useEffect(()=>{
+        setNewDishStatus(isEnabled);
+    },[isEnabled]);
+    
 
     function backScreen(){
         navigation.navigate('Home');
@@ -37,14 +45,14 @@ const AddMenu = (props) => {
             title: 'Parabéns',
             type: 'success',
             iconName: 'check',
-            message: 'Cardápio de hoje montado e disponível!'
+            message: successMessage
         },
         {
             show: showWarningModal,
             title: 'Aviso',
             type: 'warning',
             iconName: 'check',
-            message: 'Ao menos um prato precisa estar selecionado para criar um cardápio.'
+            message: warningMessage
         },
         {
             show: showDangerModal,
@@ -89,9 +97,31 @@ const AddMenu = (props) => {
 
     const openModal = (dish) => {
         setSelectedDishName(dish.name);
-        setIsEnabled(dish.status);
+        setNewDishName(dish.name);
+
         setSelectedDishCategory(dish.categoryId);
+        setNewDishCategory(dish.categoryId);
+
+        setIsEnabled(dish.status);
         setModalActions(true);
+    }
+
+    const updateDish = () => {
+        if(newDishName === ''){
+            setWarningMessage('O campo NOME DO PRATO é obrigatório.');
+            setShowWarningModal(true);
+        }
+        else if(newDishCategory === ''){
+            setWarningMessage('O campo CATEGORIA é obrigatório.');
+            setShowWarningModal(true);
+        }
+        else{
+            setSuccessMessage('Prato atualizado com sucesso!');
+            setShowSuccessModal(true);
+            setModalActions(false);
+            setButton('saveDishUpdate');
+            // alert(newDishName+" - "+newDishCategory+" - "+newDishStatus);
+        }
     }
 
     return(
@@ -158,14 +188,39 @@ const AddMenu = (props) => {
                         <Text style={style({modalType: item.type}).message}>{item.message}</Text>
                         
                         {item.type === 'success' &&
-                            <D.BackToHome modalType={item.type}>
-                                <Text
-                                    style={style({modalType: item.type}).backToHomeText}
+                            <>
+                            {button === 'saveDishUpdate' &&
+                            <D.TwoButton>
+                                <D.BackToHome
+                                    modalType={item.type}
+                                    onPress={()=>setShowSuccessModal(false)}
+                                >
+                                    <Text style={style({modalType: item.type}).backToHomeText}>
+                                        Montar um Cardápio
+                                    </Text>
+                                </D.BackToHome>
+                                <D.BackToHome
+                                    modalType={item.type}
+                                    style={{backgroundColor:'#AAAAAA'}}
                                     onPress={()=>navigation.navigate('Home')}
                                 >
-                                    Voltar para a Tela Inicial
-                                </Text>
-                            </D.BackToHome>
+                                    <Text style={style({modalType: item.type}).backToHomeText}>
+                                        Voltar para a Tela Inicial
+                                    </Text>
+                                </D.BackToHome>
+                            </D.TwoButton>}
+                            {button === 'saveMenu' &&
+                                <D.BackToHome
+                                    modalType={item.type}
+                                    button={'saveMenu'}
+                                    onPress={()=>navigation.navigate('Home')}
+                                >
+                                    <Text style={style({modalType: item.type}).backToHomeText}>
+                                        Voltar para a Tela Inicial
+                                    </Text>
+                                </D.BackToHome>
+                            }
+                            </>
                         }
                         {item.type === 'warning' &&
                             <D.BackToHome 
@@ -233,7 +288,7 @@ const AddMenu = (props) => {
                                 ))}
                             </Picker>
                         </D.Select>
-                        <D.SaveChangesButton>
+                        <D.SaveChangesButton onPress={()=>updateDish()}>
                             <Text style={style({}).saveChangesButtonText}>Salvar Alterações</Text>
                         </D.SaveChangesButton>
                     </D.ModalActionsContainer>

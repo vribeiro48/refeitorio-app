@@ -63,7 +63,6 @@ export default {
         color: #495057;
         font-weight:bold;
     `,
-
     CircleOpacity: styled.View`
         width:135px;
         height:135px;
