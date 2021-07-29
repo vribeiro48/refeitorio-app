@@ -55,6 +55,15 @@ export default function Home(){
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
             </S.Card>
+            <S.Card>
+                <S.Description>
+                    <Text style={style.descriptionTop}>Visualizar</Text>
+                    <Text style={style.descriptionBottom}>Cardápios</Text>
+                </S.Description>
+                <S.Button onPress={()=>{navigation.navigate('ViewMenus')}}>
+                    <AntDesign name="right" size={24} color="#FFFFFF" />
+                </S.Button>
+            </S.Card>
         </S.Container>
     )
 }
