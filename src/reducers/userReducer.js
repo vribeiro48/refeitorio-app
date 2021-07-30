@@ -1,5 +1,5 @@
 const initialState = {
-    dishes: [] //pratos escolhidos
+    dishes: [], //pratos escolhidos
 };
 
 export default (state = initialState, action) => {

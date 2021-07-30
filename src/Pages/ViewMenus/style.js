@@ -30,7 +30,10 @@ export default {
     ModalHeader: styled.View`
         width:100%;
         margin-top:20px;
-        align-items:flex-end;
+        margin-bottom:50px;
+        align-items:center;
+        justify-content: space-between;
+        flex-direction: row;
     `,
     CloseModalButton:styled.TouchableOpacity`
         width: 40px;
@@ -39,5 +42,21 @@ export default {
         align-items:center;
         background-color:#FF9900;
         border-radius:20px;
+    `,
+    DishList: styled.FlatList`
+        margin:0 0 15px;
+    `,
+    DishContainer: styled.View`
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+    `,
+    Dish: styled.View`
+        width: 100%;
+        flex-direction:row;
+        align-items: center;
+        justify-content: space-between;
+        padding:5px 0;
+        margin-bottom:5px;
     `,
 }
