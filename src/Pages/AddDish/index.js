@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Text, StyleSheet } from 'react-native';
-import categories from '../../categories';
+import api from '../../service/api';
 import D from './style';
 import {Picker} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function AddDish(){
     const navigation = useNavigation();
+
+    const [categoryList, setCategoryList] = useState([]);
+
+    const getCategories = async () => {
+        const request = await api.getCategoriesList();
+        setCategoryList(request);
+    }
+
+    useEffect(()=>{
+        getCategories();
+    },[]);
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showWarningModal, setShowWarningModal] = useState(false);
@@ -57,9 +68,17 @@ export default function AddDish(){
             setShowWarningModal(true);
         }
         else{
-            setShowSuccessModal(true);
-            setDishName('');
-            setDishCategory('');
+            const request = await api.insertDish(dishName, dishCategory);
+
+            if(!request.error){
+                setShowSuccessModal(true);
+                setDishName('');
+                setDishCategory('');
+            }
+            else{
+                setWarningMessage(request.error);
+                setShowWarningModal(true);
+            }
         }
     }
 
@@ -89,9 +108,9 @@ export default function AddDish(){
                         enabled={false} 
                         color='#C4C4C4'
                     />
-                    {categories.map((category, index)=>(
+                    {categoryList.map((category, index)=>(
                         <Picker.Item 
-                            label={category.title}
+                            label={category.nome}
                             value={category.id}
                             key={index}
                             color='#495057'
