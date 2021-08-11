@@ -8,7 +8,7 @@ export default {
   getCategoriesList: async () => {
     let resposta;
 
-    await api.get('categorias').then((response) => {
+    await api.get('categoria').then((response) => {
       resposta = response.data;
     });
 
@@ -27,6 +27,16 @@ export default {
       resposta = response.data;
     }).catch(error => {
       resposta = error.response.data;
+    });
+
+    return resposta;
+  },
+
+  getCategoryDishes: async () => {
+    let resposta;
+
+    await api.get('categoriapratos').then((response) => {
+      resposta = response.data;
     });
 
     return resposta;

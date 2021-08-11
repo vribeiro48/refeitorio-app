@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Alert, Switch, Text, StyleSheet } from 'react-native';
-import categories from '../../categories';
-import dishes from '../../dishes';
 import {Picker} from '@react-native-picker/picker';
 import { connect } from 'react-redux';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import api from '../../service/api';
 
 const AddMenu = (props) => {
     const navigation = useNavigation();
@@ -30,9 +29,21 @@ const AddMenu = (props) => {
     const [newDishStatus, setNewDishStatus]         = useState(true);
     const [newDishCategory, setNewDishCategory]     = useState('');
 
+    const [listCategoryDishes, setListCategoryDishes] = useState([]);
+
+    const getCategoryDishes = async () => {
+        const request = await api.getCategoryDishes();
+        setListCategoryDishes(request);
+    }
+
     useEffect(()=>{
         setNewDishStatus(isEnabled);
     },[isEnabled]);
+
+    useEffect(()=>{
+        props.setDishes([]);
+        getCategoryDishes();
+    },[])
     
 
     function backScreen(){
@@ -96,11 +107,11 @@ const AddMenu = (props) => {
     }
 
     const openModal = (dish) => {
-        setSelectedDishName(dish.name);
-        setNewDishName(dish.name);
+        setSelectedDishName(dish.nome);
+        setNewDishName(dish.nome);
 
-        setSelectedDishCategory(dish.categoryId);
-        setNewDishCategory(dish.categoryId);
+        setSelectedDishCategory(dish.categoria_id);
+        setNewDishCategory(dish.categoria_id);
 
         setIsEnabled(dish.status);
         setModalActions(true);
@@ -132,13 +143,13 @@ const AddMenu = (props) => {
             </D.Header>
 
             <D.List
-                data={categories}
+                data={listCategoryDishes}
                 renderItem={({item: categories}) => (
                     <>
                         <D.ItemsCategories>
-                            <Text style={style({}).label}>{categories.title}</Text>
-                                {dishes.map((dish, index)=>(
-                                    dish.categoryId === categories.id &&
+                            <Text style={style({}).label}>{categories.nome}</Text>
+                                {categories.prato.map((dish, index)=>(
+                                    dish.categoria_id === categories.id &&
                                     <D.DishContainer key={index}>
                                         <D.Dish onPress={
                                             dish.status
@@ -156,7 +167,7 @@ const AddMenu = (props) => {
                                                 <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
                                             }
                                             </>
-                                            <Text style={style({}).dishName}>{dish.name}</Text>
+                                            <Text style={style({}).dishName}>{dish.nome}</Text>
                                         </D.Dish>
                                         <D.DishButton onPress={()=>openModal(dish)}>
                                             <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
@@ -278,9 +289,9 @@ const AddMenu = (props) => {
                                 onValueChange={(itemValue) => setNewDishCategory(itemValue)}
                             >
                                 <Picker.Item label="Selecione uma categoria..." value="" enabled={false} style={{color:'#C4C4C4'}} />
-                                {categories.map((category, index)=>(
+                                {listCategoryDishes.map((category, index)=>(
                                     <Picker.Item 
-                                        label={category.title}
+                                        label={category.nome}
                                         value={category.id}
                                         style={{color:'#495057'}}
                                         key={index}
