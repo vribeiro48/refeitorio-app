@@ -19,10 +19,6 @@ const fetchFont = () => {
 export default function Home(){
     const navigation = useNavigation();
 
-    function goToAddDish(){
-        navigation.navigate('AddDish');
-    }
-
     const [fontsLoaded, setFontsLoaded] = useState(false);
 
     if(!fontsLoaded){
@@ -39,10 +35,19 @@ export default function Home(){
             <Text style={style.title}>Refeitório</Text>
             <S.Card>
                 <S.Description>
+                    <Text style={style.descriptionTop}>Cadastrar</Text>
+                    <Text style={style.descriptionBottom}>Categoria</Text>
+                </S.Description>
+                <S.Button onPress={()=>{navigation.navigate('AddCategory')}}>
+                    <AntDesign name="right" size={24} color="#FFFFFF" />
+                </S.Button>
+            </S.Card>
+            <S.Card>
+                <S.Description>
                     <Text style={style.descriptionTop}>Adicionar</Text>
                     <Text style={style.descriptionBottom}>Prato</Text>
                 </S.Description>
-                <S.Button onPress={goToAddDish}>
+                <S.Button onPress={()=>{navigation.navigate('AddDish')}}>
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
             </S.Card>

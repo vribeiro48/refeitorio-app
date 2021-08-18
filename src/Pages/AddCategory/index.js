@@ -1,24 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal, Text, StyleSheet } from 'react-native';
 import api from '../../service/api';
 import D from './style';
-import {Picker} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function AddDish(){
+export default function AddCategory(){
     const navigation = useNavigation();
-
-    const [categoryList, setCategoryList] = useState([]);
-
-    const getCategories = async () => {
-        const request = await api.getCategoriesList();
-        setCategoryList(request);
-    }
-
-    useEffect(()=>{
-        getCategories();
-    },[]);
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showWarningModal, setShowWarningModal] = useState(false);
@@ -37,7 +25,7 @@ export default function AddDish(){
             title: 'Parabéns',
             type: 'success',
             iconName: 'check',
-            message: 'Prato adicionado com sucesso.'
+            message: 'Categoria adicionada com sucesso.'
         },
         {
             show: showWarningModal,
@@ -55,25 +43,19 @@ export default function AddDish(){
         },
     ];
 
-    const [dishName, setDishName] = useState('');
-    const [dishCategory, setDishCategory] = useState('');
+    const [categoryName, setCategoryName] = useState('');
 
-    const addDish = async () => {
-        if(dishName === ''){
-            setWarningMessage("O campo NOME DO PRATO é obrigatório!");
-            setShowWarningModal(true);
-        }
-        else if(dishCategory === ''){
-            setWarningMessage("O campo CATEGORIA é obrigatório!");
+    const addCategory = async () => {
+        if(categoryName === ''){
+            setWarningMessage("O campo NOME DA CATEGORIA é obrigatório!");
             setShowWarningModal(true);
         }
         else{
-            const request = await api.insertDish(dishName, dishCategory);
+            const request = await api.insertCategory(categoryName);
 
             if(!request.error){
                 setShowSuccessModal(true);
-                setDishName('');
-                setDishCategory('');
+                setCategoryName('');
             }
             else{
                 setWarningMessage(request.error);
@@ -86,41 +68,17 @@ export default function AddDish(){
         <D.Container>
             <D.Header>
                 <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={backScreen}/>
-                <Text style={style({}).headerTitle}>Adicionar Prato</Text>
+                <Text style={style({}).headerTitle}>Adicionar Categoria</Text>
             </D.Header>
-            <D.Label>Nome do Prato</D.Label>
+            <D.Label>Nome da Categoria</D.Label>
             <D.Input
-                placeholder="Ex.: Bisteca Grelhada"
+                placeholder="Ex.: Salada, Acompanhamentos, Proteína, etc..."
                 placeholderTextColor="#C4C4C4"
-                value={dishName}
-                onChangeText={t=>setDishName(t)}
+                value={categoryName}
+                onChangeText={t=>setCategoryName(t)}
             />
-            <D.Label>Categoria</D.Label>
-            <D.Select>
-                <Picker
-                    selectedValue={dishCategory}
-                    onValueChange={(itemValue) => setDishCategory(itemValue)}
-                    itemStyle={style.pickerItemFont}
-                >
-                    <Picker.Item 
-                        label="Selecione uma categoria..." 
-                        value="" 
-                        enabled={false} 
-                        color='#C4C4C4'
-                    />
-                    {categoryList.map((category, index)=>(
-                        <Picker.Item 
-                            label={category.nome}
-                            value={category.id}
-                            key={index}
-                            color='#495057'
-                        />
-                    ))}
-                </Picker>
-            </D.Select>
-
-            <D.SaveButton onPress={addDish}>
-                <Text style={style({}).saveButtonText}>Adicionar Prato</Text>
+            <D.SaveButton onPress={addCategory}>
+                <Text style={style({}).saveButtonText}>Adicionar Categoria</Text>
             </D.SaveButton>
 
             {modaltypes.map((item, index)=>(
@@ -136,25 +94,16 @@ export default function AddDish(){
                         <Text style={style({modalType: item.type}).message}>{item.message}</Text>
                         
                         {item.type === 'success' &&
-                            <D.TwoButton>
-                                <D.BackToHome
-                                    modalType={item.type}
-                                    onPress={()=>setShowSuccessModal(false)}
+                            <D.BackToHome 
+                                modalType={item.type} 
+                                onPress={()=>navigation.navigate('Home')}
+                            >
+                                <Text
+                                    style={style({modalType: item.type}).backToHomeText}
                                 >
-                                    <Text style={style({modalType: item.type}).backToHomeText}>
-                                        Adicionar Outro Prato
-                                    </Text>
-                                </D.BackToHome>
-                                <D.BackToHome
-                                    modalType={item.type}
-                                    style={{backgroundColor:'#AAAAAA'}}
-                                    onPress={()=>navigation.navigate('AddMenu')}
-                                >
-                                    <Text style={style({modalType: item.type}).backToHomeText}>
-                                        Montar um Cardápio
-                                    </Text>
-                                </D.BackToHome>
-                            </D.TwoButton>
+                                    Voltar para a Tela Inicial
+                                </Text>
+                            </D.BackToHome>
                         }
                         {item.type === 'warning' &&
                             <D.BackToHome 
@@ -205,7 +154,7 @@ const style = (props) => StyleSheet.create({
     },
     message: {
         fontFamily:'PoppinsMedium',
-        width: props.modalType === 'success' ? '50%' : '100%',
+        width: props.modalType === 'success' ? '70%' : '100%',
         textAlign:'center',
         fontSize:18,
         color: '#AAAAAA',

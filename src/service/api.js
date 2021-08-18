@@ -41,4 +41,20 @@ export default {
 
     return resposta;
   },
+
+  insertCategory: async (nome) => {
+    let resposta;
+
+    await api.post('categoria', {nome}, {
+      "headers": {
+        'Content-Type':'application/json'
+      }
+    }).then(response => {
+      resposta = response.data;
+    }).catch(error => {
+      resposta = error.response.data;
+    });
+
+    return resposta;
+  },
 }

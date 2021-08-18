@@ -101,7 +101,7 @@ const AddMenu = (props) => {
         "Atenção!",
         "Prato desabilitado.",
         [
-          { text: "Tudo bem" }
+          { text: "Ok" }
         ]
       );
     }
@@ -352,7 +352,6 @@ const style = (props) => StyleSheet.create({
         textAlign:'center',
         fontSize:18,
         color: '#AAAAAA',
-        lineHeight: 20
     },
     backToHomeText: {
         color: props.modalType === 'warning' ? '#333333' : '#FFFFFF',
