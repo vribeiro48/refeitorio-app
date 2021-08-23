@@ -146,36 +146,38 @@ const AddMenu = (props) => {
                 data={listCategoryDishes}
                 renderItem={({item: categories}) => (
                     <>
+                        {categories.prato.length !== 0 &&
                         <D.ItemsCategories>
                             <Text style={style({}).label}>{categories.nome}</Text>
-                                {categories.prato.map((dish, index)=>(
-                                    dish.categoria_id === categories.id &&
-                                    <D.DishContainer key={index}>
-                                        <D.Dish onPress={
-                                            dish.status
-                                            ? ()=>toggleDishes(dish.id)
-                                            : ()=>alertDishDisabled()
-                                        }>
-                                            <>
-                                            {props.dishes.includes(dish.id) && dish.status &&
-                                                <MaterialCommunityIcons name="checkbox-marked" size={24} color="#0D6EFD" />                                     
-                                            }
-                                            {!props.dishes.includes(dish.id) && dish.status &&
-                                                <MaterialCommunityIcons name="square-outline" size={24} color="#AAAAAA" />
-                                            }
-                                            {!props.dishes.includes(dish.id) && !dish.status &&
-                                                <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
-                                            }
-                                            </>
-                                            <Text style={style({}).dishName}>{dish.nome}</Text>
-                                        </D.Dish>
-                                        <D.DishButton onPress={()=>openModal(dish)}>
-                                            <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
-                                        </D.DishButton>
-                                    </D.DishContainer>
+                            {categories.prato.map((dish, index)=>(
+                                dish.categoria_id === categories.id &&
+                                <D.DishContainer key={index}>
+                                    <D.Dish onPress={
+                                        dish.status
+                                        ? ()=>toggleDishes(dish.id)
+                                        : ()=>alertDishDisabled()
+                                    }>
+                                        <>
+                                        {props.dishes.includes(dish.id) && dish.status &&
+                                            <MaterialCommunityIcons name="checkbox-marked" size={24} color="#0D6EFD" />                                     
+                                        }
+                                        {!props.dishes.includes(dish.id) && dish.status &&
+                                            <MaterialCommunityIcons name="square-outline" size={24} color="#AAAAAA" />
+                                        }
+                                        {!props.dishes.includes(dish.id) && !dish.status &&
+                                            <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
+                                        }
+                                        </>
+                                        <Text style={style({}).dishName}>{dish.nome}</Text>
+                                    </D.Dish>
+                                    <D.DishButton onPress={()=>openModal(dish)}>
+                                        <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
+                                    </D.DishButton>
+                                </D.DishContainer>
 
-                                ))}
+                            ))}
                         </D.ItemsCategories>
+                        }
                     </>
                 )}
                 keyExtractor={categories => String(categories.id)}
