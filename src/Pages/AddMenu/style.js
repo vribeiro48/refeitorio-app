@@ -173,4 +173,9 @@ export default {
         padding:15px;
         border-radius: 5px;
     `,
+    LoadingArea: styled.View`
+        flex:1;
+        align-items: center;
+        justify-content: center;
+    `,
 }

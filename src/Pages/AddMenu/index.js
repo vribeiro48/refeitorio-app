@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Alert, Switch, Text, StyleSheet } from 'react-native';
+import { Modal, Alert, Switch, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { connect } from 'react-redux';
 import D from './style';
@@ -17,6 +17,7 @@ const AddMenu = (props) => {
     const [modalActions, setModalActions]           = useState(false);
     const [isEnabled, setIsEnabled]                 = useState(false);
     const [button, setButton]                       = useState('saveMenu');
+    const [loading, setLoading]                     = useState(false);
 
     const [selectedDishName, setSelectedDishName]   = useState('');
     const [selectedDishCategory, setSelectedDishCategory]   = useState('');
@@ -28,12 +29,15 @@ const AddMenu = (props) => {
     const [newDishName, setNewDishName]             = useState('');
     const [newDishStatus, setNewDishStatus]         = useState(true);
     const [newDishCategory, setNewDishCategory]     = useState('');
+    const [dishId, setDishId]                       = useState('');
 
     const [listCategoryDishes, setListCategoryDishes] = useState([]);
 
     const getCategoryDishes = async () => {
+        setLoading(true);
         const request = await api.getCategoryDishes();
         setListCategoryDishes(request);
+        setLoading(false);
     }
 
     useEffect(()=>{
@@ -107,6 +111,7 @@ const AddMenu = (props) => {
     }
 
     const openModal = (dish) => {
+        setDishId(dish.id);
         setSelectedDishName(dish.nome);
         setNewDishName(dish.nome);
 
@@ -117,7 +122,7 @@ const AddMenu = (props) => {
         setModalActions(true);
     }
 
-    const updateDish = () => {
+    const updateDish = async () => {
         if(newDishName === ''){
             setWarningMessage('O campo NOME DO PRATO é obrigatório.');
             setShowWarningModal(true);
@@ -127,11 +132,18 @@ const AddMenu = (props) => {
             setShowWarningModal(true);
         }
         else{
-            setSuccessMessage('Prato atualizado com sucesso!');
-            setShowSuccessModal(true);
-            setModalActions(false);
-            setButton('saveDishUpdate');
-            // alert(newDishName+" - "+newDishCategory+" - "+newDishStatus);
+            const resultado = await api.updateDish(newDishName, newDishCategory, newDishStatus, dishId);
+            if(!resultado.error){
+                setSuccessMessage('Prato '+ newDishName +' atualizado com sucesso!');
+                setShowSuccessModal(true);
+                setModalActions(false);
+                setButton('saveDishUpdate');
+                getCategoryDishes();
+            }
+            else{
+                setWarningMessage(resultado.error);
+                setShowWarningModal(true);
+            }
         }
     }
 
@@ -142,47 +154,56 @@ const AddMenu = (props) => {
                 <Text style={style({}).headerTitle}>Montar Cardápio</Text>
             </D.Header>
 
-            <D.List
-                data={listCategoryDishes}
-                renderItem={({item: categories}) => (
-                    <>
-                        {categories.prato.length !== 0 &&
-                        <D.ItemsCategories>
-                            <Text style={style({}).label}>{categories.nome}</Text>
-                            {categories.prato.map((dish, index)=>(
-                                dish.categoria_id === categories.id &&
-                                <D.DishContainer key={index}>
-                                    <D.Dish onPress={
-                                        dish.status
-                                        ? ()=>toggleDishes(dish.id)
-                                        : ()=>alertDishDisabled()
-                                    }>
-                                        <>
-                                        {props.dishes.includes(dish.id) && dish.status &&
-                                            <MaterialCommunityIcons name="checkbox-marked" size={24} color="#0D6EFD" />                                     
-                                        }
-                                        {!props.dishes.includes(dish.id) && dish.status &&
-                                            <MaterialCommunityIcons name="square-outline" size={24} color="#AAAAAA" />
-                                        }
-                                        {!props.dishes.includes(dish.id) && !dish.status &&
-                                            <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
-                                        }
-                                        </>
-                                        <Text style={style({}).dishName}>{dish.nome}</Text>
-                                    </D.Dish>
-                                    <D.DishButton onPress={()=>openModal(dish)}>
-                                        <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
-                                    </D.DishButton>
-                                </D.DishContainer>
+            {loading &&
+                <D.LoadingArea>
+                    <ActivityIndicator size="large" color="#FF9900" />
+                </D.LoadingArea>
+            }
+            {!loading &&
+                <D.List
+                    data={listCategoryDishes}
+                    renderItem={({item: categories}) => (
+                        <>
+                            {categories.prato.length !== 0 &&
+                            <D.ItemsCategories>
+                                <Text style={style({}).label}>{categories.nome}</Text>
+                                {categories.prato.map((dish, index)=>(
+                                    dish.categoria_id === categories.id &&
+                                    <D.DishContainer key={index}>
+                                        <D.Dish onPress={
+                                            dish.status
+                                            ? ()=>toggleDishes(dish.id)
+                                            : ()=>alertDishDisabled()
+                                        }>
+                                            <>
+                                            {props.dishes.includes(dish.id) && dish.status &&
+                                                <MaterialCommunityIcons name="checkbox-marked" size={24} color="#0D6EFD" />                                     
+                                            }
+                                            {!props.dishes.includes(dish.id) && dish.status &&
+                                                <MaterialCommunityIcons name="square-outline" size={24} color="#AAAAAA" />
+                                            }
+                                            {!props.dishes.includes(dish.id) && !dish.status &&
+                                                <MaterialCommunityIcons name="close-box-outline" size={24} color="#F27474" />
+                                            }
+                                            </>
+                                            <Text style={style({}).dishName}>{dish.nome}</Text>
+                                        </D.Dish>
+                                        <D.DishButton onPress={()=>openModal(dish)}>
+                                            <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
+                                        </D.DishButton>
+                                    </D.DishContainer>
 
-                            ))}
-                        </D.ItemsCategories>
-                        }
-                    </>
-                )}
-                keyExtractor={categories => String(categories.id)}
-                showsVerticalScrollIndicator={false}
-            />
+                                ))}
+                            </D.ItemsCategories>
+                            }
+                        </>
+                    )}
+                    keyExtractor={categories => String(categories.id)}
+                    showsVerticalScrollIndicator={false}
+                    refreshing={loading}
+                    onRefresh={getCategoryDishes}
+                />
+            }
 
             <D.SaveButton onPress={saveMenu}>
                 <Text style={style({}).saveButtonText}>Salvar Cardápio</Text>

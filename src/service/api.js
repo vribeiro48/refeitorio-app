@@ -57,4 +57,25 @@ export default {
 
     return resposta;
   },
+
+  updateDish: async (nome, categoria_id, status, id) => {
+    let resposta;
+
+    await api.put('atualizaprato', {
+      nome,
+      categoria_id,
+      status,
+      id
+    }, {
+      "headers": {
+        'Content-Type':'application/json'
+      }
+    }).then(response => {
+      resposta = response.data;
+    }).catch(error => {
+      resposta = error.response.data;
+    });
+
+    return resposta;
+  },
 }
