@@ -107,11 +107,12 @@ export default {
         justify-content:space-between;
         align-items:center;
     `,
-    Dish: styled.TouchableOpacity`
-        flex-direction:row;
-        align-items:center;
-        justify-content: center;
-        padding:5px 0;
+    Dish: styled.View`
+        width: 100%;
+        background-color: #FFFFFF;
+        margin-bottom: 10px;
+        padding: 20px 10px;
+        border-radius: 10px;
     `,
     DishButton: styled.TouchableOpacity`
     `,
@@ -119,5 +120,10 @@ export default {
         flex:1;
         align-items: center;
         justify-content: center;
+    `,
+    EmptyMenu: styled.View`
+        flex:1;
+        justify-content: center;
+        align-items: center;
     `,
 }

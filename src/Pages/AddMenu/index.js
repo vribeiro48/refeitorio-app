@@ -49,10 +49,6 @@ const AddMenu = (props) => {
         getCategoryDishes();
     },[]);
 
-    function backScreen(){
-        navigation.navigate('Home');
-    }
-
     const modaltypes = [
         {
             show: showSuccessModal,
@@ -119,7 +115,7 @@ const AddMenu = (props) => {
     return(
         <D.Container>
             <D.Header>
-                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={backScreen}/>
+                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={()=>navigation.goBack()}/>
                 <Text style={style({}).headerTitle}>Montar Cardápio</Text>
             </D.Header>
 
