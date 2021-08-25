@@ -15,6 +15,51 @@ export default {
     return resposta;
   },
 
+  insertCategory: async (nome) => {
+    let resposta;
+
+    await api.post('categoria', {nome}, {
+      "headers": {
+        'Content-Type':'application/json'
+      }
+    }).then(response => {
+      resposta = response.data;
+    }).catch(error => {
+      resposta = error.response.data;
+    });
+
+    return resposta;
+  },
+
+  updateCategory: async (nome, id) => {
+    let resposta;
+
+    await api.put('categoria', {id, nome}, {
+      "headers": {
+        'Content-Type':'application/json'
+      }
+    }).then(response => {
+      resposta = response.data;
+    }).catch(error => {
+      resposta = error.response.data;
+    });
+
+    return resposta;
+  },
+
+  deleteCategory: async (id) => {
+    let resposta;
+
+    await api.delete(`deletacategoria/${id}`)
+    .then(response => {
+      resposta = response.data;
+    }).catch(error => {
+      resposta = error.response.data;
+    });
+    
+    return resposta;
+  },
+
   getDishList: async () => {
     let resposta;
 
@@ -29,32 +74,6 @@ export default {
     let resposta;
 
     await api.post('prato', {nome, categoria_id}, {
-      "headers": {
-        'Content-Type':'application/json'
-      }
-    }).then(response => {
-      resposta = response.data;
-    }).catch(error => {
-      resposta = error.response.data;
-    });
-
-    return resposta;
-  },
-
-  getCategoryDishes: async () => {
-    let resposta;
-
-    await api.get('categoriapratos').then((response) => {
-      resposta = response.data;
-    });
-
-    return resposta;
-  },
-
-  insertCategory: async (nome) => {
-    let resposta;
-
-    await api.post('categoria', {nome}, {
       "headers": {
         'Content-Type':'application/json'
       }
@@ -87,7 +106,40 @@ export default {
 
     return resposta;
   },
+  
+  deleteDish: async (id) => {
+    let resposta;
 
+    await api.delete(`deletaprato/${id}`)
+    .then(response => {
+      resposta = response.data;
+    }).catch(error => {
+      resposta = error.response.data;
+    });
+    
+    return resposta;
+  },
+
+  getCategoryDishes: async () => {
+    let resposta;
+
+    await api.get('categoriapratos').then((response) => {
+      resposta = response.data;
+    });
+
+    return resposta;
+  },
+
+  getMenuDishes: async () => {
+    let resposta;
+
+    await api.get('cardapiodia').then((response) => {
+      resposta = response.data;
+    });
+    
+    return resposta;
+  },
+  
   saveMenu: async (id) => {
     let resposta;
 
@@ -104,20 +156,10 @@ export default {
     return resposta;
   },
 
-  getMenuDishes: async () => {
+  deleteMenu: async (id) => {
     let resposta;
 
-    await api.get('cardapiodia').then((response) => {
-      resposta = response.data;
-    });
-    
-    return resposta;
-  },
-
-  deleteCategory: async (id) => {
-    let resposta;
-
-    await api.delete(`deletacategoria/${id}`)
+    await api.delete(`deletapratocardapio/${id}`)
     .then(response => {
       resposta = response.data;
     }).catch(error => {
@@ -126,46 +168,4 @@ export default {
     
     return resposta;
   },
-
-  deleteDish: async (id) => {
-    let resposta;
-
-    await api.delete(`deletaprato/${id}`)
-    .then(response => {
-      resposta = response.data;
-    }).catch(error => {
-      resposta = error.response.data;
-    });
-    
-    return resposta;
-  },
-
-  updateCategory: async (nome, id) => {
-    let resposta;
-
-    await api.put('categoria', {id, nome}, {
-      "headers": {
-        'Content-Type':'application/json'
-      }
-    }).then(response => {
-      resposta = response.data;
-    }).catch(error => {
-      resposta = error.response.data;
-    });
-
-    return resposta;
-  },
-
-  deleteDishes: async (pratos, cardapio_id) => {
-    let resposta;
-
-    await api.delete('deletapratocardapio', {pratos, cardapio_id})
-    .then(response => {
-      resposta = response.data;
-    }).catch(error => {
-      resposta = error.response.data;
-    });
-    
-    return resposta;
-  }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
@@ -9,17 +9,13 @@ import api from '../../service/api';
 const ViewMenus = (props) => {
     const navigation = useNavigation();
 
-    function backScreen(){
-        navigation.navigate('Home');
-        props.setDishes([]);
-    }
-
     const [todayMenu, setTodayMenu] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getMenuDishes = async () => {
         setLoading(true);
         const resultado = await api.getMenuDishes();
+        props.setMenu(resultado.id);
         setTodayMenu(resultado.pratos);
         setLoading(false);
     }
@@ -31,7 +27,7 @@ const ViewMenus = (props) => {
     return(
         <D.Container>
             <D.Header>
-                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={backScreen}/>
+                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={()=>navigation.goBack()}/>
                 <Text style={style({}).headerTitle}>Cardápio de Hoje</Text>
                 <MaterialCommunityIcons name="plus-box" size={28} color="#333333" onPress={()=>navigation.navigate("AddMenu")}/>
             </D.Header>
@@ -41,7 +37,7 @@ const ViewMenus = (props) => {
                     <ActivityIndicator size="large" color="#FF9900" />
                 </D.LoadingArea>
             }
-            {!loading && todayMenu === undefined &&
+            {!loading && todayMenu === undefined && todayMenu.length === 0 &&
                 <D.EmptyMenu>
                     <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
                     <Text style={style({}).EmptyMenuText}>Ainda não há pratos no cardápio de hoje.</Text>
@@ -72,19 +68,12 @@ const ViewMenus = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    return{
-        dishes: state.userReducer.dishes
-    }
+    return{}
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        setDishes:(dishes)=>dispatch(
-            {
-                type: 'SET_DISHES', 
-                payload: {dishes}
-            }
-        )
+        setMenu:(menu)=>dispatch({type: 'SET_MENU', payload: {menu}}),
     }
 }
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Alert, Switch, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import { connect } from 'react-redux';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
@@ -13,37 +12,22 @@ const AddMenu = (props) => {
     const [showSuccessModal, setShowSuccessModal]   = useState(false);
     const [showWarningModal, setShowWarningModal]   = useState(false);
     const [showDangerModal, setShowDangerModal]     = useState(false);
-
-    const [modalActions, setModalActions]           = useState(false);
-    const [isEnabled, setIsEnabled]                 = useState(false);
+    
     const [button, setButton]                       = useState('saveMenu');
     const [loading, setLoading]                     = useState(false);
-
-    const [selectedDishName, setSelectedDishName]   = useState('');
-    const [selectedDishCategory, setSelectedDishCategory]   = useState('');
 
     const [successMessage, setSuccessMessage]       = useState('Cardápio de hoje montado e disponível!');
     const [warningMessage, setWarningMessage]       = useState('Ao menos um prato precisa estar selecionado para criar um cardápio.');
     const [errorMessage, setErrorMessage]           = useState('Infelizmente não foi possível criar um cardápio. Tente novamente em alguns instantes.');
 
-    const [newDishName, setNewDishName]             = useState('');
-    const [newDishStatus, setNewDishStatus]         = useState(true);
-    const [newDishCategory, setNewDishCategory]     = useState('');
-    const [dishId, setDishId]                       = useState('');
-
     const [listCategoryDishes, setListCategoryDishes] = useState([]);
 
     const getCategoryDishes = async () => {
-        props.setDishes([]);
         setLoading(true);
         const request = await api.getCategoryDishes();
         setListCategoryDishes(request);
         setLoading(false);
     }
-
-    useEffect(()=>{
-        setNewDishStatus(isEnabled);
-    },[isEnabled]);
 
     useEffect(()=>{
         getCategoryDishes();
@@ -90,10 +74,10 @@ const AddMenu = (props) => {
         if(props.dishes.length === 0){
             setShowWarningModal(true);
         }else{
+            await api.deleteMenu(props.menu);
             const resultado = await api.saveMenu(props.dishes);
             if(!resultado.error){
                 setShowSuccessModal(true);
-                props.setDishes([]);
             }
             else{
                 setShowWarningModal(true);
@@ -247,7 +231,8 @@ const AddMenu = (props) => {
 
 const mapStateToProps = (state) => {
     return{
-        dishes: state.userReducer.dishes
+        dishes: state.userReducer.dishes,
+        menu: state.userReducer.menu
     }
 }
 
