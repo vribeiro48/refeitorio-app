@@ -34,6 +34,7 @@ const AddMenu = (props) => {
     const [listCategoryDishes, setListCategoryDishes] = useState([]);
 
     const getCategoryDishes = async () => {
+        props.setDishes([]);
         setLoading(true);
         const request = await api.getCategoryDishes();
         setListCategoryDishes(request);
@@ -45,10 +46,8 @@ const AddMenu = (props) => {
     },[isEnabled]);
 
     useEffect(()=>{
-        props.setDishes([]);
         getCategoryDishes();
-    },[])
-    
+    },[]);
 
     function backScreen(){
         navigation.navigate('Home');
@@ -92,11 +91,18 @@ const AddMenu = (props) => {
     }
 
     const saveMenu = async () => {
-        if(props.dishes != ''){
-            setShowSuccessModal(true);
-            props.setDishes([]);
-        }else{
+        if(props.dishes.length === 0){
             setShowWarningModal(true);
+        }else{
+            const resultado = await api.saveMenu(props.dishes);
+            if(!resultado.error){
+                setShowSuccessModal(true);
+                props.setDishes([]);
+            }
+            else{
+                setShowWarningModal(true);
+                warningMessage(resultado.error);
+            }
         }
     }
 
@@ -108,43 +114,6 @@ const AddMenu = (props) => {
           { text: "Ok" }
         ]
       );
-    }
-
-    const openModal = (dish) => {
-        setDishId(dish.id);
-        setSelectedDishName(dish.nome);
-        setNewDishName(dish.nome);
-
-        setSelectedDishCategory(dish.categoria_id);
-        setNewDishCategory(dish.categoria_id);
-
-        setIsEnabled(dish.status);
-        setModalActions(true);
-    }
-
-    const updateDish = async () => {
-        if(newDishName === ''){
-            setWarningMessage('O campo NOME DO PRATO é obrigatório.');
-            setShowWarningModal(true);
-        }
-        else if(newDishCategory === ''){
-            setWarningMessage('O campo CATEGORIA é obrigatório.');
-            setShowWarningModal(true);
-        }
-        else{
-            const resultado = await api.updateDish(newDishName, newDishCategory, newDishStatus, dishId);
-            if(!resultado.error){
-                setSuccessMessage('Prato '+ newDishName +' atualizado com sucesso!');
-                setShowSuccessModal(true);
-                setModalActions(false);
-                setButton('saveDishUpdate');
-                getCategoryDishes();
-            }
-            else{
-                setWarningMessage(resultado.error);
-                setShowWarningModal(true);
-            }
-        }
     }
 
     return(
@@ -188,9 +157,6 @@ const AddMenu = (props) => {
                                             </>
                                             <Text style={style({}).dishName}>{dish.nome}</Text>
                                         </D.Dish>
-                                        <D.DishButton onPress={()=>openModal(dish)}>
-                                            <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
-                                        </D.DishButton>
                                     </D.DishContainer>
 
                                 ))}
@@ -279,55 +245,6 @@ const AddMenu = (props) => {
                     </D.ModalContainer>
                 </Modal>
             ))}
-
-            <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={modalActions}>
-                <D.ActionsMain>
-                    <D.ModalActionsContainer>
-                        <D.CloseModalButton onPress={()=>setModalActions(false)}>
-                            <MaterialCommunityIcons name="close" size={24} color="#FFFFFF"/>
-                        </D.CloseModalButton>
-                        <D.ToogleDishStatus>
-                            <Text style={style({}).toogleDishStatusText}>
-                                {isEnabled ? 'Desabilitar' : 'Habilitar'} {selectedDishName}.
-                            </Text>
-                            <Switch
-                                trackColor={{ false: "#767577", true: "#FF9900" }}
-                                thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
-                                ios_backgroundColor="#3e3e3e"
-                                onValueChange={()=>setIsEnabled(!isEnabled)}
-                                value={isEnabled}
-                            />
-                        </D.ToogleDishStatus>
-                        <Text style={style({}).label}>Alterar o Nome do Prato</Text>
-                        <D.Input
-                            placeholder={selectedDishName}
-                            placeholderTextColor="#C4C4C4"
-                            value={newDishName}
-                            onChangeText={t=>setNewDishName(t)}
-                        />
-                        <Text style={style({}).label}>Alterar Categoria</Text>
-                        <D.Select>
-                            <Picker
-                                selectedValue={selectedDishCategory}
-                                onValueChange={(itemValue) => setNewDishCategory(itemValue)}
-                            >
-                                <Picker.Item label="Selecione uma categoria..." value="" enabled={false} style={{color:'#C4C4C4'}} />
-                                {listCategoryDishes.map((category, index)=>(
-                                    <Picker.Item 
-                                        label={category.nome}
-                                        value={category.id}
-                                        style={{color:'#495057'}}
-                                        key={index}
-                                    />
-                                ))}
-                            </Picker>
-                        </D.Select>
-                        <D.SaveChangesButton onPress={()=>updateDish()}>
-                            <Text style={style({}).saveChangesButtonText}>Salvar Alterações</Text>
-                        </D.SaveChangesButton>
-                    </D.ModalActionsContainer>
-                </D.ActionsMain>
-            </Modal>
         </D.Container>
     )
 }

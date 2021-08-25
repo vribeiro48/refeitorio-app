@@ -15,10 +15,6 @@ export default function AddCategory(){
     const [warningMessage, setWarningMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('Infelizmente não foi possível criar um cardápio. Tente novamente em alguns instantes.');
 
-    function backScreen(){
-        navigation.navigate('Home');
-    }
-
     const modaltypes = [
         {
             show: showSuccessModal,
@@ -67,7 +63,7 @@ export default function AddCategory(){
     return(
         <D.Container>
             <D.Header>
-                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={backScreen}/>
+                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={()=>navigation.goBack()}/>
                 <Text style={style({}).headerTitle}>Adicionar Categoria</Text>
             </D.Header>
             <D.Label>Nome da Categoria</D.Label>

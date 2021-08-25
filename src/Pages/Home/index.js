@@ -35,19 +35,19 @@ export default function Home(){
             <Text style={style.title}>Refeitório</Text>
             <S.Card>
                 <S.Description>
-                    <Text style={style.descriptionTop}>Cadastrar</Text>
-                    <Text style={style.descriptionBottom}>Categoria</Text>
+                    <Text style={style.descriptionTop}>Lista de</Text>
+                    <Text style={style.descriptionBottom}>Categorias</Text>
                 </S.Description>
-                <S.Button onPress={()=>{navigation.navigate('AddCategory')}}>
+                <S.Button onPress={()=>{navigation.navigate('ListCategory')}}>
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
             </S.Card>
             <S.Card>
                 <S.Description>
-                    <Text style={style.descriptionTop}>Adicionar</Text>
-                    <Text style={style.descriptionBottom}>Prato</Text>
+                    <Text style={style.descriptionTop}>Lista de</Text>
+                    <Text style={style.descriptionBottom}>Pratos</Text>
                 </S.Description>
-                <S.Button onPress={()=>{navigation.navigate('AddDish')}}>
+                <S.Button onPress={()=>{navigation.navigate('ListDish')}}>
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
             </S.Card>
@@ -62,8 +62,8 @@ export default function Home(){
             </S.Card>
             <S.Card>
                 <S.Description>
-                    <Text style={style.descriptionTop}>Visualizar</Text>
-                    <Text style={style.descriptionBottom}>Cardápios</Text>
+                    <Text style={style.descriptionTop}>Cardápio</Text>
+                    <Text style={style.descriptionBottom}>De Hoje</Text>
                 </S.Description>
                 <S.Button onPress={()=>{navigation.navigate('ViewMenus')}}>
                     <AntDesign name="right" size={24} color="#FFFFFF" />

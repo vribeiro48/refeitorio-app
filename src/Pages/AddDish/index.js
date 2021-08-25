@@ -85,7 +85,7 @@ export default function AddDish(){
     return(
         <D.Container>
             <D.Header>
-                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={backScreen}/>
+                <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={()=>navigation.goBack()}/>
                 <Text style={style({}).headerTitle}>Adicionar Prato</Text>
             </D.Header>
             <D.Label>Nome do Prato</D.Label>
