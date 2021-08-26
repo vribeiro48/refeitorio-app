@@ -31,11 +31,12 @@ export default {
   `,
   ModalActionContainer: styled.View`
     flex: 1;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
     background: rgba(0, 0, 0, 0.7);
   `,
   ModalContent: styled.View`
-    width:100%;
+    width:90%;
     border-top-width:5px;
     border-top-color:#FF9900;
     background-color:#FFFFFF;
@@ -61,7 +62,7 @@ export default {
   ActionsItem: styled.TouchableOpacity`
     width: 120px;
     height: 120px;
-    background-color: ${(props) => props.action === "edit" ? '#F9F9F9' : 'rgb(242, 116, 116)'};
+    background-color: ${(props) => props.action === "edit" ? '#EDEDED' : 'rgb(242, 116, 116)'};
     padding: 20px 25px;
     border-radius: 10px;
     justify-content: center;
@@ -193,5 +194,10 @@ export default {
     justify-content:center;
     align-items:center;
     border-radius: 5px;
+  `,
+  EmptyDish: styled.View`
+    flex:1;
+    justify-content: center;
+    align-items: center;
   `,
 }

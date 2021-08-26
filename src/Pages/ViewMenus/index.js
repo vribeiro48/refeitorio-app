@@ -15,9 +15,9 @@ const ViewMenus = (props) => {
     const getMenuDishes = async () => {
         setLoading(true);
         const resultado = await api.getMenuDishes();
-        props.setMenu(resultado.id);
         setTodayMenu(resultado.pratos);
         setLoading(false);
+        props.setMenu(resultado.id);
     }
 
     useEffect(()=>{
@@ -37,10 +37,16 @@ const ViewMenus = (props) => {
                     <ActivityIndicator size="large" color="#FF9900" />
                 </D.LoadingArea>
             }
-            {!loading && todayMenu === undefined && todayMenu.length === 0 &&
+            {!loading && todayMenu === undefined &&
                 <D.EmptyMenu>
                     <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
-                    <Text style={style({}).EmptyMenuText}>Ainda não há pratos no cardápio de hoje.</Text>
+                    <Text style={style({}).EmptyMenuText}>Cardápio de hoje ainda não criado.</Text>
+                </D.EmptyMenu>
+            }
+            {!loading && todayMenu.length === 0 &&
+                <D.EmptyMenu>
+                    <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
+                    <Text style={style({}).EmptyMenuText}>Não há pratos no cardápio de hoje.</Text>
                 </D.EmptyMenu>
             }
             {!loading && todayMenu !== undefined &&

@@ -148,10 +148,10 @@ export default function AddDish(){
                                 <D.BackToHome
                                     modalType={item.type}
                                     style={{backgroundColor:'#AAAAAA'}}
-                                    onPress={()=>navigation.navigate('AddMenu')}
+                                    onPress={()=>navigation.navigate('Home')}
                                 >
                                     <Text style={style({modalType: item.type}).backToHomeText}>
-                                        Montar um Cardápio
+                                        Voltar para o Inicio
                                     </Text>
                                 </D.BackToHome>
                             </D.TwoButton>

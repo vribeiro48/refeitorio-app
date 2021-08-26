@@ -8,6 +8,38 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function ListCategory(){
     const navigation = useNavigation();
 
+    const [showSuccessModal, setShowSuccessModal]   = useState(false);
+    const [showWarningModal, setShowWarningModal]   = useState(false);
+    const [showDangerModal, setShowDangerModal]     = useState(false);
+
+    const [successMessage, setSuccessMessage]       = useState('Categoria atualizada com sucesso!');
+    const [warningMessage, setWarningMessage]       = useState('Ao menos um prato precisa estar selecionado para criar um cardápio.');
+    const [errorMessage, setErrorMessage]           = useState('Infelizmente não foi possível criar um cardápio. Tente novamente em alguns instantes.');
+
+    const modaltypes = [
+        {
+            show: showSuccessModal,
+            title: 'Parabéns',
+            type: 'success',
+            iconName: 'check',
+            message: successMessage
+        },
+        {
+            show: showWarningModal,
+            title: 'Aviso',
+            type: 'warning',
+            iconName: 'check',
+            message: warningMessage
+        },
+        {
+            show: showDangerModal,
+            title: 'Erro',
+            type: 'danger',
+            iconName: 'close',
+            message: errorMessage
+        },
+    ];
+
     const [categoryList, setCategoryList] = useState([]);
     const [modalCategory, setModalCategory] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -16,7 +48,7 @@ export default function ListCategory(){
     const [deleteModal, setDeleteModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
 
-    const [newCategoryName, setNewCategoryName] = useState(modalCategory.name);
+    const [newCategoryName, setNewCategoryName] = useState('');
 
     const getCategories = async () => {
       setLoading(true);
@@ -31,6 +63,7 @@ export default function ListCategory(){
 
     const options = (name, id) => {
       setModalCategory({name, id});
+      setNewCategoryName(name);
       setOptionsModal(true);
     }
 
@@ -48,24 +81,37 @@ export default function ListCategory(){
       const resultado = await api.deleteCategory(id);
       if(!resultado.error){
         setDeleteModal(false);
-        getCategories();
-        alert("Categoria Excluída");
+        setSuccessMessage("Categoria excluída com sucesso!");
+        setShowSuccessModal(true);
       }
       else{
-        alert(resultado.error);
+        setWarningMessage(resultado.error);
+        setShowWarningModal(true);
       }
     }
 
     const updateCategory = async (id) => {
-      const resultado = await api.updateCategory(newCategoryName, id);
-      if(!resultado.error){
-        setEditModal(false);
-        getCategories();
-        alert("Categoria Alterada");
+      if(newCategoryName === ''){
+        setWarningMessage("O campo NOME DA CATEGORIA é obrigatório.");
+        setShowWarningModal(true);
       }
       else{
-        alert(resultado.error);
+        const resultado = await api.updateCategory(newCategoryName, id);
+
+        if(!resultado.error){
+          setEditModal(false);
+          setShowSuccessModal(true);
+        }
+        else{
+          setWarningMessage(resultado.error);
+          setShowWarningModal(true);
+        }
       }
+    }
+
+    const refresh = () => {
+      getCategories();
+      setShowSuccessModal(false);
     }
 
     return(
@@ -80,6 +126,12 @@ export default function ListCategory(){
           <D.LoadingArea>
             <ActivityIndicator size="large" color="#FF9900" />
           </D.LoadingArea>
+        }
+        {!loading && categoryList.length === 0 &&
+          <D.EmptyCategory>
+              <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
+              <Text style={style({}).EmptyCategoryText}>Nenhuma categoria cadastrada no sistema.</Text>
+          </D.EmptyCategory>
         }
         {!loading &&
           <D.List
@@ -104,7 +156,7 @@ export default function ListCategory(){
           transparent={true}
           statusBarTranslucent={true}
           visible={optionsModal}>
-            <D.ModalContainer>
+            <D.ModalActionsContainer>
               <D.ModalContent>
                 <D.ModalHeader>
                   <D.Close onPress={()=>setOptionsModal(false)}>
@@ -124,14 +176,14 @@ export default function ListCategory(){
                   </D.ActionsItem>
                 </D.Actions>
               </D.ModalContent>
-            </D.ModalContainer>
+            </D.ModalActionsContainer>
         </Modal>
         <Modal 
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
           visible={deleteModal}>
-            <D.ModalContainer>
+            <D.ModalActionsContainer>
               <D.ModalContent>
                 <D.ModalHeader>
                   <D.Close onPress={()=>setDeleteModal(false)}>
@@ -149,14 +201,14 @@ export default function ListCategory(){
                   </D.DeleteActionItem>
                 </D.Actions>
               </D.ModalContent>
-            </D.ModalContainer>
+            </D.ModalActionsContainer>
         </Modal>
         <Modal 
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
           visible={editModal}>
-            <D.ModalContainer>
+            <D.ModalActionsContainer>
               <D.ModalContent>
                 <D.ModalHeader>
                   <D.Close onPress={()=>setEditModal(false)}>
@@ -180,8 +232,58 @@ export default function ListCategory(){
                   </D.EditActionItem>
                 </D.Actions>
               </D.ModalContent>
-            </D.ModalContainer>
+            </D.ModalActionsContainer>
         </Modal>
+
+        {modaltypes.map((item, index)=>(
+            <Modal key={index} animationType="slide" transparent={true} statusBarTranslucent={true} visible={item.show}>
+                <D.ModalContainer>
+                    <Text style={style({}).modalTitleText}>{item.title}!</Text>
+                    <D.CircleOpacity modalType={item.type}>
+                        <D.Circle modalType={item.type}>
+                            <MaterialCommunityIcons name={item.iconName} size={60} color={item.type === 'warning' ? "#333333" : "#FFFFFF"} />
+                        </D.Circle>
+                    </D.CircleOpacity>
+
+                    <Text style={style({modalType: item.type}).message}>{item.message}</Text>
+                    
+                    {item.type === 'success' &&
+                        <D.BackToHome 
+                            modalType={item.type} 
+                            onPress={()=>refresh()}
+                        >
+                            <Text
+                                style={style({modalType: item.type}).backToHomeText}
+                            >
+                                Voltar para a Tela Inicial
+                            </Text>
+                        </D.BackToHome>
+                    }
+                    {item.type === 'warning' &&
+                        <D.BackToHome 
+                            modalType={item.type}
+                            onPress={()=>setShowWarningModal(false)}
+                        >
+                            <Text style={style({modalType: item.type}).backToHomeText}>
+                                Corrigir
+                            </Text>
+                        </D.BackToHome>
+                    }
+                    {item.type === 'danger' &&
+                        <D.BackToHome 
+                            modalType={item.type} 
+                            onPress={()=>navigation.navigate('Home')}
+                        >
+                            <Text
+                                style={style({modalType: item.type}).backToHomeText}
+                            >
+                                Voltar para a Tela Inicial
+                            </Text>
+                        </D.BackToHome>
+                    }
+                </D.ModalContainer>
+            </Modal>
+        ))}
       </D.Container>
     )
 }
@@ -214,5 +316,29 @@ const style = (props) => StyleSheet.create({
       fontSize: 16,
       color: props.action === "delete" ? '#FFFFFF' : '#AAAAAA',
       fontFamily:'PoppinsMedium',
-    }
+    },
+    modalTitleText: {
+        fontFamily:'PoppinsBold',
+        fontSize: 28,
+        color: '#495057'
+    },
+    message: {
+        fontFamily:'PoppinsMedium',
+        width: props.modalType === 'success' ? '70%' : '100%',
+        textAlign:'center',
+        fontSize:18,
+        color: '#AAAAAA',
+    },
+    backToHomeText: {
+        color: props.modalType === 'warning' ? '#333333' : '#FFFFFF',
+        fontFamily:'PoppinsBold',
+        textAlign:'center',
+    },
+    EmptyCategoryText: {
+        width: '70%',
+        fontFamily:'PoppinsMedium',
+        textAlign:'center',
+        fontSize:18,
+        color: '#AAAAAA',
+    },
 })

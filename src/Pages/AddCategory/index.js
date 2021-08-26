@@ -91,7 +91,7 @@ export default function AddCategory(){
                         
                         {item.type === 'success' &&
                             <D.BackToHome 
-                                modalType={item.type} 
+                                modalType={item.type}
                                 onPress={()=>navigation.navigate('Home')}
                             >
                                 <Text

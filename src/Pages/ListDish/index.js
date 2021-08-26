@@ -45,7 +45,6 @@ export default function ListDish(){
     const [categoryList, setCategoryList] = useState([]);
     const [modalCategory, setModalCategory] = useState([]);
     const [isEnabled, setIsEnabled] = useState(false);
-    const [button, setButton] = useState('saveMenu');
     const [loading, setLoading] = useState(false);
 
     const [optionsModal, setOptionsModal] = useState(false);
@@ -97,11 +96,13 @@ export default function ListDish(){
       const resultado = await api.deleteDish(id);
       if(!resultado.error){
         setDeleteModal(false);
+        setSuccessMessage("Prato excluído com sucesso!");
+        setShowSuccessModal(true);
         getDishes();
-        alert("Prato Excluído");
       }
       else{
-        alert(resultado.error);
+        setWarningMessage(resultado.error);
+        setShowWarningModal(true);
       }
     }
 
@@ -120,7 +121,6 @@ export default function ListDish(){
           setSuccessMessage('Prato '+ newDishName +' atualizado com sucesso!');
           setShowSuccessModal(true);
           setEditModal(false);
-          setButton('saveDishUpdate');
           getDishes();
         }
         else{
@@ -128,6 +128,11 @@ export default function ListDish(){
           setShowWarningModal(true);
         }
       }
+    }
+
+    const refresh = () => {
+      getDishes();
+      setShowSuccessModal(false);
     }
 
     return(
@@ -142,6 +147,12 @@ export default function ListDish(){
           <D.LoadingArea>
             <ActivityIndicator size="large" color="#FF9900" />
           </D.LoadingArea>
+        }
+        {!loading && dishList.length === 0 &&
+          <D.EmptyDish>
+              <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
+              <Text style={style({}).EmptyDishText}>Nenhum prato cadastrado no sistema.</Text>
+          </D.EmptyDish>
         }
         {!loading &&
           <D.List
@@ -285,39 +296,15 @@ export default function ListDish(){
                     <Text style={style({modalType: item.type}).message}>{item.message}</Text>
                     
                     {item.type === 'success' &&
-                        <>
-                        {button === 'saveDishUpdate' &&
-                        <D.TwoButton>
-                            <D.BackToHome
-                                modalType={item.type}
-                                onPress={()=>navigation.navigate('AddMenu')}
-                            >
-                                <Text style={style({modalType: item.type}).backToHomeText}>
-                                    Montar um Cardápio
-                                </Text>
-                            </D.BackToHome>
-                            <D.BackToHome
-                                modalType={item.type}
-                                style={{backgroundColor:'#AAAAAA'}}
-                                onPress={()=>navigation.navigate('Home')}
-                            >
-                                <Text style={style({modalType: item.type}).backToHomeText}>
-                                    Voltar para a Tela Inicial
-                                </Text>
-                            </D.BackToHome>
-                        </D.TwoButton>}
-                        {button === 'saveMenu' &&
-                            <D.BackToHome
-                                modalType={item.type}
-                                button={'saveMenu'}
-                                onPress={()=>navigation.navigate('Home')}
-                            >
-                                <Text style={style({modalType: item.type}).backToHomeText}>
-                                    Voltar para a Tela Inicial
-                                </Text>
-                            </D.BackToHome>
-                        }
-                        </>
+                      <D.BackToHome
+                          modalType={item.type}
+                          button={'saveMenu'}
+                          onPress={()=>refresh()}
+                      >
+                          <Text style={style({modalType: item.type}).backToHomeText}>
+                              Voltar para a Tela Inicial
+                          </Text>
+                      </D.BackToHome>
                     }
                     {item.type === 'warning' &&
                         <D.BackToHome 
@@ -408,5 +395,12 @@ const style = (props) => StyleSheet.create({
         fontSize:16,
         color:'#AAAAAA',
         fontFamily:'PoppinsRegular'
+    },
+    EmptyDishText: {
+        width: '70%',
+        fontFamily:'PoppinsMedium',
+        textAlign:'center',
+        fontSize:18,
+        color: '#AAAAAA',
     },
 })
