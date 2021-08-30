@@ -10,14 +10,22 @@ const ViewMenus = (props) => {
     const navigation = useNavigation();
 
     const [todayMenu, setTodayMenu] = useState([]);
+    const [menu, setMenu] = useState('');
     const [loading, setLoading] = useState(false);
 
     const getMenuDishes = async () => {
         setLoading(true);
         const resultado = await api.getMenuDishes();
+        setMenu(resultado);
         setTodayMenu(resultado.pratos);
         setLoading(false);
-        props.setMenu(resultado.id);
+        
+        if(resultado === ""){
+            props.setDishes([]);
+        }
+        else{
+            props.setMenu(resultado.id);
+        }
     }
 
     useEffect(()=>{
@@ -29,7 +37,12 @@ const ViewMenus = (props) => {
             <D.Header>
                 <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={()=>navigation.goBack()}/>
                 <Text style={style({}).headerTitle}>Cardápio de Hoje</Text>
-                <MaterialCommunityIcons name="plus-box" size={28} color="#333333" onPress={()=>navigation.navigate("AddMenu")}/>
+                {menu === "" &&
+                    <MaterialCommunityIcons name="plus-box" size={28} color="#333333" onPress={()=>navigation.navigate("AddMenu")}/>
+                }
+                {menu !== "" &&
+                    <MaterialCommunityIcons name="square-edit-outline" size={28} color="#333333" onPress={()=>navigation.navigate("AddMenu")}/>
+                }
             </D.Header>
 
             {loading &&
@@ -37,13 +50,19 @@ const ViewMenus = (props) => {
                     <ActivityIndicator size="large" color="#FF9900" />
                 </D.LoadingArea>
             }
-            {!loading && todayMenu === undefined &&
+            {!loading && menu === "" &&
                 <D.EmptyMenu>
                     <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
                     <Text style={style({}).EmptyMenuText}>Cardápio de hoje ainda não criado.</Text>
                 </D.EmptyMenu>
             }
-            {!loading && todayMenu.length === 0 &&
+            {!loading && menu !== "" && todayMenu === undefined &&
+                <D.EmptyMenu>
+                    <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
+                    <Text style={style({}).EmptyMenuText}>Não há pratos no cardápio de hoje.</Text>
+                </D.EmptyMenu>
+            }
+            {!loading && menu !== "" && todayMenu !== undefined && todayMenu.length === 0 &&
                 <D.EmptyMenu>
                     <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
                     <Text style={style({}).EmptyMenuText}>Não há pratos no cardápio de hoje.</Text>
@@ -54,13 +73,13 @@ const ViewMenus = (props) => {
                     data={todayMenu}
                     renderItem={({item: todayMenu}) => (
                         <>
-                        <D.ItemsCategories>
-                            <D.DishContainer>
-                                <D.Dish>
-                                    <Text style={style({}).dishName}>{todayMenu.nome}</Text>
-                                </D.Dish>
-                            </D.DishContainer>
-                        </D.ItemsCategories>
+                            <D.ItemsCategories>
+                                <D.DishContainer>
+                                    <D.Dish>
+                                        <Text style={style({}).dishName}>{todayMenu.nome}</Text>
+                                    </D.Dish>
+                                </D.DishContainer>
+                            </D.ItemsCategories>
                         </>
                     )}
                     keyExtractor={todayMenu => String(todayMenu.id)}
@@ -79,6 +98,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
+        setDishes:(dishes)=>dispatch({type: 'SET_DISHES', payload: {dishes}}),
         setMenu:(menu)=>dispatch({type: 'SET_MENU', payload: {menu}}),
     }
 }

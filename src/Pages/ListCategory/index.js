@@ -141,7 +141,8 @@ export default function ListCategory(){
               <Text style={style({}).categoryName}>{category.nome}</Text>
               
               <D.DishButton onPress={()=>options(category.nome, category.id)}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
+                <MaterialCommunityIcons name="square-edit-outline" size={24} color="#333333" />
+                <Text style={style({}).actionsText}>Ações</Text>
               </D.DishButton>
             </D.Category>
           )}
@@ -155,23 +156,25 @@ export default function ListCategory(){
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
-          visible={optionsModal}>
+          visible={optionsModal}
+          onRequestClose={()=>setOptionsModal(false)}
+          >
             <D.ModalActionsContainer>
+              <D.ModalHeader>
+                <D.Close onPress={()=>setOptionsModal(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
+                </D.Close>
+              </D.ModalHeader>
               <D.ModalContent>
-                <D.ModalHeader>
-                  <D.Close onPress={()=>setOptionsModal(false)}>
-                    <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
-                  </D.Close>
-                </D.ModalHeader>
                 <Text style={style({}).modalTitle}>O que deseja fazer com a categoria: <Text style={style({}).modalTitleCategoryName}>{modalCategory.name}</Text>?
                 </Text>
                 <D.Actions>
                   <D.ActionsItem onPress={()=>actionEditModal()} action="edit">
-                    <MaterialCommunityIcons name="square-edit-outline" size={30} color="#AAAAAA" />
+                    <MaterialCommunityIcons name="square-edit-outline" size={24} color="#AAAAAA" />
                     <Text style={style({action: "edit"}).ActionTitle}>Editar</Text>
                   </D.ActionsItem>
                   <D.ActionsItem onPress={()=>actionDeleteModal()} action="delete">
-                    <MaterialCommunityIcons name="trash-can-outline" size={30} color="#FFFFFF" />
+                    <MaterialCommunityIcons name="trash-can-outline" size={24} color="#FFFFFF" />
                     <Text style={style({action: "delete"}).ActionTitle}>Excluir</Text>
                   </D.ActionsItem>
                 </D.Actions>
@@ -182,14 +185,16 @@ export default function ListCategory(){
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
-          visible={deleteModal}>
+          visible={deleteModal}
+          onRequestClose={()=>setDeleteModal(false)}
+        >
             <D.ModalActionsContainer>
+              <D.ModalHeader>
+                <D.Close onPress={()=>setDeleteModal(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
+                </D.Close>
+              </D.ModalHeader>
               <D.ModalContent>
-                <D.ModalHeader>
-                  <D.Close onPress={()=>setDeleteModal(false)}>
-                    <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
-                  </D.Close>
-                </D.ModalHeader>
                 <Text style={style({}).modalTitle}>Tem certeza que deseja excluir a categoria: <Text style={style({}).modalTitleCategoryName}>{modalCategory.name}</Text>?
                 </Text>
                 <D.Actions>
@@ -207,14 +212,15 @@ export default function ListCategory(){
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
-          visible={editModal}>
+          visible={editModal}
+          onRequestClose={()=>setEditModal(false)}>
             <D.ModalActionsContainer>
+              <D.ModalHeader>
+                <D.Close onPress={()=>setEditModal(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
+                </D.Close>
+              </D.ModalHeader>
               <D.ModalContent>
-                <D.ModalHeader>
-                  <D.Close onPress={()=>setEditModal(false)}>
-                    <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
-                  </D.Close>
-                </D.ModalHeader>
                 <Text style={style({}).modalTitle}>Editando a categoria: <Text style={style({}).modalTitleCategoryName}>{modalCategory.name}</Text>.
                 </Text>
                 <D.InputArea>
@@ -297,6 +303,7 @@ const style = (props) => StyleSheet.create({
         color: '#333333'
     },
     categoryName: {
+      width: '70%',
       fontSize: 16,
       fontFamily:'PoppinsMedium',
       color: '#AAAAAA'
@@ -305,12 +312,13 @@ const style = (props) => StyleSheet.create({
       width: '100%',
       textAlign:'center',
       fontSize:16,
-      fontFamily:'PoppinsBold',
-      color: '#333333',
+      fontFamily:'PoppinsRegular',
+      color: '#666666',
       marginBottom: 20
     },
     modalTitleCategoryName: {
       color: '#FF9900',
+      fontFamily:'PoppinsBold',
     },
     ActionTitle: {
       fontSize: 16,
@@ -340,5 +348,9 @@ const style = (props) => StyleSheet.create({
         textAlign:'center',
         fontSize:18,
         color: '#AAAAAA',
+    },
+    actionsText: {
+      fontFamily:'PoppinsMedium',
+      color: '#333333',
     },
 })

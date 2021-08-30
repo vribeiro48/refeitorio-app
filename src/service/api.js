@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://192.168.200.106:3000/',
+  baseURL: 'https://refeitorio-api.herokuapp.com/',
 });
 
 export default {
@@ -136,7 +136,7 @@ export default {
     await api.get('cardapiodia').then((response) => {
       resposta = response.data;
     });
-    
+
     return resposta;
   },
   

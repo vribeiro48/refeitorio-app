@@ -162,7 +162,8 @@ export default function ListDish(){
               <Text style={style({}).categoryName}>{dish.nome}</Text>
               
               <D.DishButton onPress={()=>options(dish.nome, dish.id, dish.categoria_id, dish.status)}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color="#AAAAAA" />
+                <MaterialCommunityIcons name="square-edit-outline" size={24} color="#333333" />
+                <Text style={style({}).actionsText}>Ações</Text>
               </D.DishButton>
             </D.Category>
           )}
@@ -177,23 +178,24 @@ export default function ListDish(){
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
-          visible={optionsModal}>
+          visible={optionsModal}
+          onRequestClose={()=>setOptionsModal(false)}>
             <D.ModalActionContainer>
+              <D.ModalHeader>
+                <D.Close onPress={()=>setOptionsModal(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
+                </D.Close>
+              </D.ModalHeader>
               <D.ModalContent>
-                <D.ModalHeader>
-                  <D.Close onPress={()=>setOptionsModal(false)}>
-                    <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
-                  </D.Close>
-                </D.ModalHeader>
                 <Text style={style({}).modalActionTitle}>O que deseja fazer com o prato: <Text style={style({}).modalTitleCategoryName}>{modalCategory.name}</Text>?
                 </Text>
                 <D.Actions>
                   <D.ActionsItem onPress={()=>actionEditModal()} action="edit">
-                    <MaterialCommunityIcons name="square-edit-outline" size={30} color="#AAAAAA" />
+                    <MaterialCommunityIcons name="square-edit-outline" size={24} color="#AAAAAA" />
                     <Text style={style({action: "edit"}).ActionTitle}>Editar</Text>
                   </D.ActionsItem>
                   <D.ActionsItem onPress={()=>actionDeleteModal()} action="delete">
-                    <MaterialCommunityIcons name="trash-can-outline" size={30} color="#FFFFFF" />
+                    <MaterialCommunityIcons name="trash-can-outline" size={24} color="#FFFFFF" />
                     <Text style={style({action: "delete"}).ActionTitle}>Excluir</Text>
                   </D.ActionsItem>
                 </D.Actions>
@@ -204,14 +206,15 @@ export default function ListDish(){
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
-          visible={deleteModal}>
+          visible={deleteModal}
+          onRequestClose={()=>setDeleteModal(false)}>
             <D.ModalActionContainer>
+              <D.ModalHeader>
+                <D.Close onPress={()=>setDeleteModal(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
+                </D.Close>
+              </D.ModalHeader>
               <D.ModalContent>
-                <D.ModalHeader>
-                  <D.Close onPress={()=>setDeleteModal(false)}>
-                    <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
-                  </D.Close>
-                </D.ModalHeader>
                 <Text style={style({}).modalActionTitle}>Tem certeza que deseja excluir o prato: <Text style={style({}).modalTitleCategoryName}>{modalCategory.name}</Text>?
                 </Text>
                 <D.Actions>
@@ -229,26 +232,15 @@ export default function ListDish(){
           animationType="slide"
           transparent={true}
           statusBarTranslucent={true}
-          visible={editModal}>
+          visible={editModal}
+          onRequestClose={()=>setEditModal(false)}>
             <D.ModalActionContainer>
+              <D.ModalHeader>
+                <D.Close onPress={()=>setEditModal(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
+                </D.Close>
+              </D.ModalHeader>
               <D.ModalContent>
-                <D.ModalHeader>
-                  <D.Close onPress={()=>setEditModal(false)}>
-                    <MaterialCommunityIcons name="close" size={24} color="#FFFFFF" />
-                  </D.Close>
-                </D.ModalHeader>
-                <D.ToogleDishStatus>
-                    <Text style={style({}).toogleDishStatusText}>
-                      {isEnabled ? 'Desabilitar' : 'Habilitar'} {modalCategory.name}.
-                    </Text>
-                    <Switch
-                      trackColor={{ false: "#767577", true: "#FF9900" }}
-                      thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
-                      ios_backgroundColor="#3e3e3e"
-                      onValueChange={()=>setIsEnabled(!isEnabled)}
-                      value={isEnabled}
-                    />
-                </D.ToogleDishStatus>
                 <D.InputArea>
                   <D.Label>Nome do Prato</D.Label>
                   <D.Input
@@ -274,6 +266,18 @@ export default function ListDish(){
                     ))}
                   </Picker>
                 </D.Select>
+                <D.ToogleDishStatus>
+                  <Text style={style({}).toogleDishStatusText}>
+                    {isEnabled ? 'Desabilitar' : 'Habilitar'} esse prato.
+                  </Text>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#FF9900" }}
+                    thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={()=>setIsEnabled(!isEnabled)}
+                    value={isEnabled}
+                  />
+                </D.ToogleDishStatus>
                 <D.Actions>
                   <D.EditActionItem onPress={()=>updateDish()}>
                     <Text style={style({action: "delete"}).ActionTitle}>Salvar Alterações</Text>
@@ -342,19 +346,21 @@ const style = (props) => StyleSheet.create({
         color: '#333333'
     },
     categoryName: {
+      width: '70%',
       fontSize: 16,
       fontFamily:'PoppinsMedium',
-      color: '#AAAAAA'
+      color: '#AAAAAA',
     },
     modalActionTitle: {
       width: '100%',
       textAlign:'center',
       fontSize:16,
-      fontFamily:'PoppinsBold',
+      fontFamily:'PoppinsRegular',
       color: '#333333',
       marginBottom: 20
     },
     modalTitleCategoryName: {
+      fontFamily:'PoppinsBold',
       color: '#FF9900',
     },
     ActionTitle: {
@@ -402,5 +408,9 @@ const style = (props) => StyleSheet.create({
         textAlign:'center',
         fontSize:18,
         color: '#AAAAAA',
+    },
+    actionsText: {
+      fontFamily:'PoppinsMedium',
+      color: '#333333',
     },
 })

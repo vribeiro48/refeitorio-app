@@ -28,6 +28,12 @@ export default {
     justify-content: space-between;
   `,
   DishButton: styled.TouchableOpacity`
+    background-color:#EDEDED;
+    padding: 5px 10px;
+    border-radius: 5px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   `,
   ModalActionContainer: styled.View`
     flex: 1;
@@ -40,12 +46,13 @@ export default {
     border-top-width:5px;
     border-top-color:#FF9900;
     background-color:#FFFFFF;
-    padding:20px 50px 50px;
+    padding:20px 50px;
     align-items: center;
   `,
   ModalHeader: styled.View`
     width: 100%;
     align-items: flex-end;
+    padding: 0 20px;
     margin-bottom: 10px;
   `,
   Close: styled.TouchableOpacity`
@@ -60,18 +67,18 @@ export default {
     flex-direction: row;
   `,
   ActionsItem: styled.TouchableOpacity`
-    width: 120px;
-    height: 120px;
+    flex: 1;
     background-color: ${(props) => props.action === "edit" ? '#EDEDED' : 'rgb(242, 116, 116)'};
-    padding: 20px 25px;
+    padding: 10px;
     border-radius: 10px;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     margin: 0 5px;
   `,
   DeleteActionItem: styled.TouchableOpacity`
     background-color: ${(props) => props.action === "edit" ? '#F9F9F9' : 'rgb(242, 116, 116)'};
-    padding: 20px 25px;
+    padding: 10px 15px;
     border-radius: 10px;
     justify-content: center;
     align-items: center;
@@ -80,7 +87,7 @@ export default {
   EditActionItem: styled.TouchableOpacity`
     width: 100%;
     background-color: #FF9900;
-    padding: 20px 25px;
+    padding: 10px 15px;
     border-radius: 10px;
     justify-content: center;
     align-items: center;
@@ -121,7 +128,6 @@ export default {
     color: #8863E6;
     font-size: 16px;
     padding:15px 0;
-    margin-bottom:20px;
   `,
   ModalContainer: styled.View`
     flex:1;
