@@ -8,7 +8,7 @@ export default {
         align-items:center;
         padding: 25px;
     `,
-    Card: styled.View`
+    Card: styled.TouchableHighlight`
         background-color:#FFFFFF;
         padding:20px;
         justify-content:space-between;
@@ -19,7 +19,7 @@ export default {
         margin-bottom:10px;
     `,
     Description: styled.View``,
-    Button: styled.TouchableOpacity`
+    Button: styled.View`
         background-color:#FF9900;
         padding:12px;
         border-radius:5px;

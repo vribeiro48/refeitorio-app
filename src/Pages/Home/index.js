@@ -33,32 +33,38 @@ export default function Home(){
         <S.Container>
             <StatusBar style="auto" />
             <Text style={style.title}>Refeitório</Text>
-            <S.Card>
+            <S.Card onPress={()=>{navigation.navigate('ListCategory')}} underlayColor="#ededed">
+                <>
                 <S.Description>
                     <Text style={style.descriptionTop}>Lista de</Text>
                     <Text style={style.descriptionBottom}>Categorias</Text>
                 </S.Description>
-                <S.Button onPress={()=>{navigation.navigate('ListCategory')}}>
+                <S.Button>
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
+                </>
             </S.Card>
-            <S.Card>
+            <S.Card onPress={()=>{navigation.navigate('ListDish')}} underlayColor="#ededed">
+                <>
                 <S.Description>
                     <Text style={style.descriptionTop}>Lista de</Text>
                     <Text style={style.descriptionBottom}>Pratos</Text>
                 </S.Description>
-                <S.Button onPress={()=>{navigation.navigate('ListDish')}}>
+                <S.Button>
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
+                </>
             </S.Card>
-            <S.Card>
+            <S.Card onPress={()=>{navigation.navigate('ViewMenus')}} underlayColor="#ededed">
+                <>
                 <S.Description>
                     <Text style={style.descriptionTop}>Cardápio</Text>
                     <Text style={style.descriptionBottom}>De Hoje</Text>
                 </S.Description>
-                <S.Button onPress={()=>{navigation.navigate('ViewMenus')}}>
+                <S.Button>
                     <AntDesign name="right" size={24} color="#FFFFFF" />
                 </S.Button>
+                </>
             </S.Card>
         </S.Container>
     )
