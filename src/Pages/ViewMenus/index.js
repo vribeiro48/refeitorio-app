@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
@@ -9,7 +9,6 @@ import api from '../../service/api';
 const ViewMenus = (props) => {
     const navigation = useNavigation();
 
-    const [todayMenu, setTodayMenu] = useState([]);
     const [menu, setMenu] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -17,7 +16,6 @@ const ViewMenus = (props) => {
         setLoading(true);
         const resultado = await api.getMenuDishes();
         setMenu(resultado);
-        setTodayMenu(resultado.pratos);
         setLoading(false);
         
         if(resultado === ""){
@@ -56,33 +54,31 @@ const ViewMenus = (props) => {
                     <Text style={style({}).EmptyMenuText}>Cardápio de hoje ainda não criado.</Text>
                 </D.EmptyMenu>
             }
-            {!loading && menu !== "" && todayMenu === undefined &&
-                <D.EmptyMenu>
-                    <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
-                    <Text style={style({}).EmptyMenuText}>Não há pratos no cardápio de hoje.</Text>
-                </D.EmptyMenu>
-            }
-            {!loading && menu !== "" && todayMenu !== undefined && todayMenu.length === 0 &&
-                <D.EmptyMenu>
-                    <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
-                    <Text style={style({}).EmptyMenuText}>Não há pratos no cardápio de hoje.</Text>
-                </D.EmptyMenu>
-            }
-            {!loading && todayMenu !== undefined &&
+            {!loading && menu !== "" &&
                 <D.List
-                    data={todayMenu}
-                    renderItem={({item: todayMenu}) => (
+                    data={menu}
+                    renderItem={({item: menu}) => (
                         <>
                             <D.ItemsCategories>
                                 <D.DishContainer>
                                     <D.Dish>
-                                        <Text style={style({}).dishName}>{todayMenu.nome}</Text>
+                                        <Text style={style({}).categoryName}>
+                                            {menu.nome}
+                                        </Text>
+                                        {menu.prato.map(prato => (
+                                            <View style={style({}).dishView} key={prato.id}>
+                                                <MaterialCommunityIcons name="minus" size={24} color="#AAAAAA" />
+                                                <Text style={style({}).dishName}>
+                                                    {prato.nome}
+                                                </Text>
+                                            </View>
+                                        ))}
                                     </D.Dish>
                                 </D.DishContainer>
                             </D.ItemsCategories>
                         </>
                     )}
-                    keyExtractor={todayMenu => String(todayMenu.id)}
+                    keyExtractor={menu => String(menu.id)}
                     showsVerticalScrollIndicator={false}
                     refreshing={loading}
                     onRefresh={getMenuDishes}
@@ -113,13 +109,22 @@ const style = (props) => StyleSheet.create({
         fontFamily:'PoppinsBold',
         color: '#333333'
     },
+    dishView:{
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
     dishName:{
         fontSize:16,
         fontFamily:'PoppinsRegular',
         color: '#AAAAAA',
         marginLeft: 5,
-        justifyContent: 'center',
-        alignItems: 'center'
+    },
+    categoryName:{
+        fontSize:16,
+        fontFamily:'PoppinsMedium',
+        color: '#495057',
+        marginLeft: 5,
     },
     saveButtonText: {
         fontFamily:'PoppinsBold',
