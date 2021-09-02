@@ -158,13 +158,13 @@ export default function ListDish(){
           <D.List
           data={dishList}
           renderItem={({item: dish}) => (
-            <D.Category>
+            <D.Category onPress={()=>options(dish.nome, dish.id, dish.categoria_id, dish.status)} underlayColor="#ededed">
+              <>
               <Text style={style({}).categoryName}>{dish.nome}</Text>
-              
-              <D.DishButton onPress={()=>options(dish.nome, dish.id, dish.categoria_id, dish.status)}>
+              <D.DishButton>
                 <MaterialCommunityIcons name="square-edit-outline" size={24} color="#333333" />
-                <Text style={style({}).actionsText}>Ações</Text>
               </D.DishButton>
+              </>
             </D.Category>
           )}
           keyExtractor={dish => String(dish.id)}

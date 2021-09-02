@@ -137,13 +137,13 @@ export default function ListCategory(){
           <D.List
           data={categoryList}
           renderItem={({item: category}) => (
-            <D.Category>
+            <D.Category onPress={()=>options(category.nome, category.id)} underlayColor="#ededed">
+              <>
               <Text style={style({}).categoryName}>{category.nome}</Text>
-              
-              <D.DishButton onPress={()=>options(category.nome, category.id)}>
+              <D.DishButton>
                 <MaterialCommunityIcons name="square-edit-outline" size={24} color="#333333" />
-                <Text style={style({}).actionsText}>Ações</Text>
               </D.DishButton>
+              </>
             </D.Category>
           )}
           keyExtractor={category => String(category.id)}

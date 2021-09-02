@@ -18,7 +18,7 @@ export default {
     align-items: center;
     justify-content: center;
   `,
-  Category: styled.View`
+  Category: styled.TouchableHighlight`
     background-color: #FFFFFF;
     margin-bottom: 10px;
     padding: 20px 10px;
@@ -27,7 +27,7 @@ export default {
     align-items: center;
     justify-content: space-between;
   `,
-  DishButton: styled.TouchableOpacity`
+  DishButton: styled.View`
     background-color:#EDEDED;
     padding: 5px 10px;
     border-radius: 5px;
