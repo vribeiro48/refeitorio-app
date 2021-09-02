@@ -13,17 +13,22 @@ const ViewMenus = (props) => {
     const [loading, setLoading] = useState(false);
 
     const getMenuDishes = async () => {
+        props.setDishes([]);
         setLoading(true);
         const resultado = await api.getMenuDishes();
         setMenu(resultado);
         setLoading(false);
-        
-        if(resultado === ""){
-            props.setDishes([]);
-        }
-        else{
-            props.setMenu(resultado.id);
-        }
+
+        const array = [];
+        resultado.map(categoria=>{
+            categoria.prato.map(prato=>{
+                array.push(prato.id);
+                prato.cardapios.map(cardapio=>{
+                    props.setMenu(cardapio.id);
+                })
+            })
+        });
+        props.setDishes(array);
     }
 
     useEffect(()=>{
@@ -35,26 +40,26 @@ const ViewMenus = (props) => {
             <D.Header>
                 <MaterialCommunityIcons name="arrow-left" size={24} color="#333333" onPress={()=>navigation.goBack()}/>
                 <Text style={style({}).headerTitle}>Cardápio de Hoje</Text>
-                {menu === "" &&
-                    <MaterialCommunityIcons name="plus-box" size={28} color="#333333" onPress={()=>navigation.navigate("AddMenu")}/>
-                }
-                {menu !== "" &&
-                    <MaterialCommunityIcons name="square-edit-outline" size={28} color="#333333" onPress={()=>navigation.navigate("AddMenu")}/>
-                }
+                <MaterialCommunityIcons
+                    name={menu.length === 0 ? "plus-box" : "square-edit-outline"}
+                    size={24}
+                    color="#333333"
+                    onPress={()=>navigation.navigate("AddMenu")}
+                />
             </D.Header>
-
+            
             {loading &&
                 <D.LoadingArea>
                     <ActivityIndicator size="large" color="#FF9900" />
                 </D.LoadingArea>
             }
-            {!loading && menu === "" &&
+            {!loading && menu.length === 0 &&
                 <D.EmptyMenu>
                     <MaterialCommunityIcons name="information-outline" size={60} color="#AAAAAA" />
                     <Text style={style({}).EmptyMenuText}>Cardápio de hoje ainda não criado.</Text>
                 </D.EmptyMenu>
             }
-            {!loading && menu !== "" &&
+            {!loading && menu.length !== 0 &&
                 <D.List
                     data={menu}
                     renderItem={({item: menu}) => (
