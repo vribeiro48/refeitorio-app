@@ -1,6 +1,6 @@
 const initialState = {
     dishes: [], //pratos escolhidos
-    menu: '',
+    menu: '', //id do cardápio do dia
 };
 
 export default (state = initialState, action) => {

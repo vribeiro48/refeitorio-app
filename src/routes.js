@@ -4,21 +4,24 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const AppStack = createStackNavigator();
 
-import Home from './Pages/Home';
+import Home from './pages/Home';
 
-import AddDish from './Pages/AddDish';
-import ListDish from './Pages/ListDish';
+import AddCategory from './pages/AddCategory';
+import ListCategory from './pages/ListCategory';
 
-import AddMenu from './Pages/AddMenu';
-import ViewMenus from './Pages/ViewMenus';
+import AddDish from './pages/AddDish';
+import ListDish from './pages/ListDish';
 
-import AddCategory from './Pages/AddCategory';
-import ListCategory from './Pages/ListCategory';
+import AddMenu from './pages/AddMenu';
+import ViewMenus from './pages/ViewMenus';
 
 export default function Routes(){
     return(
         <NavigationContainer>
-            <AppStack.Navigator screenOptions={{ headerShown: false }}>
+            <AppStack.Navigator 
+                initialRouteName="Home" 
+                screenOptions={{ headerShown: false }}
+            >
                 <AppStack.Screen name="Home" component={Home}/>
                 <AppStack.Screen name="ListCategory" component={ListCategory}/>
                 <AppStack.Screen name="AddCategory" component={AddCategory}/>

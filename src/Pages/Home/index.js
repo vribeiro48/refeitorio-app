@@ -5,29 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
-import AppLoading from 'expo-app-loading';
-import * as Font from 'expo-font'; 
-
-const fetchFont = () => {
-    return Font.loadAsync({
-        "PoppinsBold":require('../../../assets/fonts/Poppins-Bold.ttf'),
-        "PoppinsMedium":require('../../../assets/fonts/Poppins-Medium.ttf'),
-        "PoppinsRegular":require('../../../assets/fonts/Poppins-Regular.ttf'),
-    })
-}
-
 export default function Home(){
     const navigation = useNavigation();
-
-    const [fontsLoaded, setFontsLoaded] = useState(false);
-
-    if(!fontsLoaded){
-        return <AppLoading
-            startAsync={fetchFont}
-            onFinish={()=>setFontsLoaded(true)}
-            onError={()=>console.log("ERRO")}
-        />
-    }
       
     return(
         <S.Container>

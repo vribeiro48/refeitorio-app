@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Text, StyleSheet } from 'react-native';
 import api from '../../service/api';
 import D from './style';
-import {Picker} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import SelectCategoryButton from '../../components/SelectCategoryButton';
 
 export default function AddDish(){
     const navigation = useNavigation();
@@ -26,10 +26,6 @@ export default function AddDish(){
 
     const [warningMessage, setWarningMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('Infelizmente não foi possível criar um cardápio. Tente novamente em alguns instantes.');
-
-    function backScreen(){
-        navigation.navigate('Home');
-    }
 
     const modaltypes = [
         {
@@ -96,28 +92,12 @@ export default function AddDish(){
                 onChangeText={t=>setDishName(t)}
             />
             <D.Label>Categoria</D.Label>
-            <D.Select>
-                <Picker
-                    selectedValue={dishCategory}
-                    onValueChange={(itemValue) => setDishCategory(itemValue)}
-                    itemStyle={style.pickerItemFont}
-                >
-                    <Picker.Item 
-                        label="Selecione uma categoria..." 
-                        value="" 
-                        enabled={false} 
-                        color='#C4C4C4'
-                    />
-                    {categoryList.map((category, index)=>(
-                        <Picker.Item 
-                            label={category.nome}
-                            value={category.id}
-                            key={index}
-                            color='#495057'
-                        />
-                    ))}
-                </Picker>
-            </D.Select>
+            <SelectCategoryButton
+                opcoes={categoryList}
+                onChangeSelect={(id)=>setDishCategory(id)}
+                text="Escolha uma opção..."
+                buttonSpace={100}
+            />
 
             <D.SaveButton onPress={addDish}>
                 <Text style={style({}).saveButtonText}>Adicionar Prato</Text>

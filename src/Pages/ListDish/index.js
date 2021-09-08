@@ -5,6 +5,7 @@ import api from '../../service/api';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import SelectCategoryButton from '../../components/SelectCategoryButton';
 
 export default function ListDish(){
     const navigation = useNavigation();
@@ -245,27 +246,24 @@ export default function ListDish(){
                   <D.Label>Nome do Prato</D.Label>
                   <D.Input
                     placeholder={modalCategory.name}
-                    placeholderTextColor="#C4C4C4"
+                    placeholderTextColor="#AAAAAA"
                     value={newDishName}
                     onChangeText={t=>setNewDishName(t)}
                   />
                 </D.InputArea>
-                <D.Select>
-                  <Picker
-                    selectedValue={modalCategory.category}
-                    onValueChange={(itemValue) => setNewDishCategory(itemValue)}
-                  >
-                    <Picker.Item label="Selecione uma categoria..." value="" enabled={false} style={{color:'#C4C4C4'}} />
-                    {categoryList.map((category, index)=>(
-                        <Picker.Item 
-                            label={category.nome}
-                            value={category.id}
-                            style={{color:'#495057'}}
-                            key={index}
-                        />
-                    ))}
-                  </Picker>
-                </D.Select>
+                <SelectCategoryButton
+                  opcoes={categoryList}
+                  onChangeSelect={(id) => setNewDishCategory(id)}
+                  text="Selecione uma opção..."
+                  categoryName={
+                    categoryList.map(categoria=>{
+                      if (categoria.id === modalCategory.category){
+                        return categoria.nome
+                      }
+                    })
+                  }
+                  buttonSpace={200}
+                />
                 <D.ToogleDishStatus>
                   <Text style={style({}).toogleDishStatusText}>
                     {isEnabled ? 'Desabilitar' : 'Habilitar'} esse prato.
