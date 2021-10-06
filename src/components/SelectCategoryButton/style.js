@@ -10,7 +10,6 @@ export default {
     align-items: center;
     border-radius: 5px;
     padding: 10px 16px;
-    margin-bottom:20px;
   `,
   ModalHeader: styled.View`
     padding: 20px;

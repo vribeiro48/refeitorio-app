@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, StyleSheet, ActivityIndicator, Switch } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Modal, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import api from '../../service/api';
 import D from './style';
 import { useNavigation } from '@react-navigation/native';
@@ -251,30 +250,29 @@ export default function ListDish(){
                     onChangeText={t=>setNewDishName(t)}
                   />
                 </D.InputArea>
-                <SelectCategoryButton
-                  opcoes={categoryList}
-                  onChangeSelect={(id) => setNewDishCategory(id)}
-                  text="Selecione uma opção..."
-                  categoryName={
-                    categoryList.map(categoria=>{
-                      if (categoria.id === modalCategory.category){
-                        return categoria.nome
-                      }
-                    })
-                  }
-                  buttonSpace={200}
-                />
-                <D.ToogleDishStatus>
-                  <Text style={style({}).toogleDishStatusText}>
-                    {isEnabled ? 'Desabilitar' : 'Habilitar'} esse prato.
-                  </Text>
-                  <Switch
-                    trackColor={{ false: "#767577", true: "#FF9900" }}
-                    thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={()=>setIsEnabled(!isEnabled)}
-                    value={isEnabled}
+                <D.InputArea>
+                  <D.Label>Categoria</D.Label>
+                  <SelectCategoryButton
+                    opcoes={categoryList}
+                    onChangeSelect={(id) => setNewDishCategory(id)}
+                    text="Selecione uma opção..."
+                    categoryName={
+                      categoryList.map(categoria=>{
+                        if (categoria.id === modalCategory.category){
+                          return categoria.nome
+                        }
+                      })
+                    }
+                    buttonSpace={200}
                   />
+                </D.InputArea>
+                <D.ToogleDishStatus>
+                  <D.Checkbox onPress={() => setIsEnabled(!isEnabled)}>
+                    <MaterialCommunityIcons name={isEnabled ? 'square-outline' : 'checkbox-marked' } size={24} color={isEnabled ? '#AAAAAA' : '#0D6EFD' } />
+                    <Text style={style({}).toogleDishStatusText}>
+                      Desabilitar esse prato.
+                    </Text>
+                  </D.Checkbox>
                 </D.ToogleDishStatus>
                 <D.Actions>
                   <D.EditActionItem onPress={()=>updateDish()}>
@@ -398,7 +396,8 @@ const style = (props) => StyleSheet.create({
     toogleDishStatusText: {
         fontSize:16,
         color:'#AAAAAA',
-        fontFamily:'PoppinsRegular'
+        fontFamily:'PoppinsRegular',
+        marginLeft: 5
     },
     EmptyDishText: {
         width: '70%',

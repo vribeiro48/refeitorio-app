@@ -93,6 +93,9 @@ export default {
     align-items: center;
     margin: 0 5px;
   `,
+  Checkbox: styled.TouchableOpacity`
+    flex-direction: row;
+  `,
   InputArea: styled.View`
     width: 100%;
     text-align: left;
@@ -117,8 +120,6 @@ export default {
     width:100%;
     margin:20px 0px;
     flex-direction:row;
-    justify-content:space-between;
-    align-items:center;
   `,
   Select: styled.View`
     width:100%;
